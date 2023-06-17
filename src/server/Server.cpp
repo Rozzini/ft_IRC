@@ -6,11 +6,11 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 15:23:06 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/11 18:42:31 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/17 15:53:21 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "network/Server.hpp"
+#include "Server.hpp"
 
 /* Constructor and Destructor */
 
@@ -19,15 +19,15 @@ Server::Server(const std::string &port, const std::string &pass)
 {
     _running = 1;
     _sock = create_socket();
-    _parser = new Parser(this);
+    //_parser = new Parser(this);
 }
 
 Server::~Server() 
 {
-    delete _parser;
+    //delete _parser;
 
-    for (size_t i = 0; i < _channels.size(); i++)
-        delete _clients[i];
+    // for (size_t i = 0; i < _channels.size(); i++)
+    //     delete _clients[i];
 }
 
 
@@ -40,7 +40,7 @@ void            Server::start()
     pollfd srv = {_sock, POLLIN, 0};
     _pfds.push_back(srv);
 
-    log("Server is listening...");
+    std::cout << "Server is listening..." << std::endl;
 
     // running the main loop and waiting for connections
 
@@ -91,7 +91,7 @@ Client*         Server::get_client(const std::string& nickname)
 
     while (it_b != it_e)
     {
-        if (!nickname.compare(it_b->second->get_nickname()))
+        if (!nickname.compare(it_b->second->get_nick()))
             return it_b->second;
 
         it_b++;
@@ -100,21 +100,21 @@ Client*         Server::get_client(const std::string& nickname)
     return NULL;
 }
 
-Channel*        Server::get_channel(const std::string& name)
-{
-    channel_iterator it_b = _channels.begin();
-    channel_iterator it_e = _channels.begin();
+// Channel*        Server::get_channel(const std::string& name)
+// {
+//     channel_iterator it_b = _channels.begin();
+//     channel_iterator it_e = _channels.begin();
 
-    while (it_b != it_e)
-    {
-        if (!name.compare((*it_b)->get_name()))
-            return (*it_b);
+//     while (it_b != it_e)
+//     {
+//         if (!name.compare((*it_b)->get_name()))
+//             return (*it_b);
 
-        it_b++;
-    }
+//         it_b++;
+//     }
 
-    return NULL;
-}
+//     return NULL;
+// }
 
 
 /* Handle Clients */
@@ -151,8 +151,9 @@ void            Server::on_client_connect()
     // logging connect message
 
     char message[1000];
-    sprintf(message, "%s:%d has connected.", client->get_hostname().c_str(), client->get_port());
-    log(message);
+    std::cout << client->get_host().c_str() <<  client->get_port() << " has connected!" <<std::endl;
+    //sprintf(message, "%s:%d has connected.", client->get_host().c_str(), client->get_port());
+    //log(message);
 }
 
 void            Server::on_client_disconnect(int fd)
@@ -163,13 +164,14 @@ void            Server::on_client_disconnect(int fd)
 
         Client* client = _clients.at(fd);
 
-        client->leave();
+        //client->leave();
 
         // log about disconnecting 
 
         char message[1000];
-		sprintf(message, "%s:%d has disconnected!", client->get_hostname().c_str(), client->get_port());
-		log(message);
+        std::cout << client->get_host().c_str() <<  client->get_port() << " has disconnected!" <<std::endl;
+		//sprintf(message, "%s:%d has disconnected!", client->get_host().c_str(), client->get_port());
+		//log(message);
 
         _clients.erase(fd);
 
@@ -204,10 +206,10 @@ void            Server::on_client_message(int fd)
 {
     try
     {
-        Client*     client = _clients.at(fd);
+        //Client*     client = _clients.at(fd);
         std::string message = this->read_message(fd);
-        
-        _parser->invoke(client, message);
+        std::cout << message << std::endl;
+        //_parser->invoke(client, message);
     }
     catch (const std::exception& e) 
     {
@@ -238,13 +240,13 @@ std::string     Server::read_message(int fd)
 
 /* Create Channel */
 
-Channel*        Server::create_channel(const std::string& name, const std::string& key, Client* client)
-{
-    Channel *channel = new Channel(name, key, client);
-    _channels.push_back(channel);
+// Channel*        Server::create_channel(const std::string& name, const std::string& key, Client* client)
+// {
+//     Channel *channel = new Channel(name, key, client);
+//     _channels.push_back(channel);
 
-    return channel;
-}
+//     return channel;
+// }
 
 
 /* Create Socket */
