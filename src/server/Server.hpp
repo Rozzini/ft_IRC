@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 15:23:17 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/17 14:54:20 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/25 19:01:43 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,19 +33,20 @@
 #include <map>
 
 #include <iostream>
-class Server;
 
 #include "Client.hpp"
-//#include "Channel.hpp"
-//#include "command/Parser.hpp"
+#include "Channel.hpp"
+#include "../cmd/Parser.hpp"
 
+class Server;
+class Channel;
 
 #define MAX_CONNECTIONS 999
 
 class Server
 {
     typedef std::vector<pollfd>::iterator       pfd_iterator;
-    //typedef std::vector<Channel *>::iterator    channel_iterator;
+    typedef std::vector<Channel *>::iterator    channel_iterator;
     typedef std::map<int, Client *>::iterator   client_iterator;
 
     private:
@@ -58,7 +59,7 @@ class Server
         const std::string       _pass;
 
         std::vector<pollfd>     _pfds;
-        //std::vector<Channel *>  _channels;
+        std::vector<Channel *>  _channels;
         std::map<int, Client *> _clients;
 
         //Parser*                 _parser;
@@ -81,7 +82,7 @@ class Server
 
         std::string     get_password() const;
         Client*         get_client(const std::string &nickname);
-        //Channel*        get_channel(const std::string &name);
+        Channel*        get_channel(const std::string &name);
 
         /* Handle Clients */
 
@@ -93,7 +94,7 @@ class Server
 
         /* Create Channel */
 
-        //Channel*        create_channel(const std::string &name, const std::string &key, Client *client);
+        Channel*        create_channel(const std::string &name, const std::string &key, Client *client);
 
         /* Create Socket */
 

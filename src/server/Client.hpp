@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 19:10:46 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/11 15:38:50 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/25 19:16:42 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@
 #include <sys/socket.h>
 #include <string>
 #include <vector>
+#include "Server.hpp"
+
+class Channel;
 
 class Client
 {
@@ -49,6 +52,7 @@ public:
 	int get_fd() const;
 	int get_port() const;
 	int get_state();
+	Channel* get_channel();
 
 	std::string get_nick() const;
 	std::string get_uname() const;

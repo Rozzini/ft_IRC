@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 19:10:46 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/17 14:47:38 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/25 18:43:35 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,10 @@ std::string Client::get_host() const
 	return host;
 }
 
+Channel *get_channel()
+{
+	return NULL;
+}
 // send msd
 void Client::send(const std::string &msg) const
 {

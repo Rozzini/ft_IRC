@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 15:23:06 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/17 15:53:21 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/25 17:51:47 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ void            Server::on_client_connect()
 
     // logging connect message
 
-    char message[1000];
+    //char message[1000];
     std::cout << client->get_host().c_str() <<  client->get_port() << " has connected!" <<std::endl;
     //sprintf(message, "%s:%d has connected.", client->get_host().c_str(), client->get_port());
     //log(message);
@@ -168,7 +168,7 @@ void            Server::on_client_disconnect(int fd)
 
         // log about disconnecting 
 
-        char message[1000];
+        //char message[1000];
         std::cout << client->get_host().c_str() <<  client->get_port() << " has disconnected!" <<std::endl;
 		//sprintf(message, "%s:%d has disconnected!", client->get_host().c_str(), client->get_port());
 		//log(message);
