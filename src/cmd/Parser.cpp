@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:44:41 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/25 18:13:41 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/27 17:35:50 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ Parser::Parser(Server* srv) : _srv(srv)
     _commands["PASS"] = new PASS(_srv);
     _commands["NICK"] = new NICK(_srv);
     _commands["USER"] = new USER(_srv);
-    _commands[" PM "] = new PM(_srv);
+    _commands["PM"] = new PM(_srv);
 
     _commands["QUIT"] = new QUIT(_srv);
     _commands["JOIN"] = new JOIN(_srv);

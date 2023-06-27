@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 19:10:46 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/25 18:43:35 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/27 17:19:24 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,40 +63,40 @@ void Client::set_name(const std::string &name)
 // GETTERS
 int Client::get_fd() const
 {
-	return fd;
+	return this->fd;
 }
 
 int Client::get_port() const
 {
-	return port;
+	return this->port;
 }
 
 int Client::get_state()
 {
-	return state;
+	return this->state;
 }
 
 std::string Client::get_nick() const
 {
-	return nick;
+	return this->nick;
 }
 
 std::string Client::get_uname() const
 {
-	return uname;
+	return this->uname;
 }
 
 std::string Client::get_name() const
 {
-	return name;
+	return this->name;
 }
 
 std::string Client::get_host() const
 {
-	return host;
+	return this->host;
 }
 
-Channel *get_channel()
+Channel *Client::get_channel()
 {
 	return NULL;
 }

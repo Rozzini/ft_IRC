@@ -33,9 +33,9 @@ protected:
     bool is_valid_mode(char c);
 
 public:
-    Command(Server* server);
-    virtual void execute(Client* client, std::vector<std::string> args) = 0;
+    explicit Command(Server* server);
     virtual ~Command();
+    virtual void execute(Client* client, std::vector<std::string> args) = 0;
 };
 
 class PASS : public Command

@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 18:03:16 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/25 19:18:39 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/27 17:55:03 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,64 +105,67 @@ void USER::execute(Client *client, std::vector<std::string> args)
 	client->welcome();
 }
 
-// PRIVMSG <msgtarget> :<message>
-// void PM::execute(Client *client, std::vector<std::string> args)
-// {
-// 	if (args.size() < 2 || args[0].empty() || args[1].empty())
-// 	{
-// 		client->reply("need more params");
-// 		return;
-// 	}
+//PRIVMSG <msgtarget> :<message>
+void PM::execute(Client *client, std::vector<std::string> args)
+{
+	(void)client;
+	(void)args;
+	//ZOZI BLYAR FIX THIS SHIIIIIT
+	// if (args.size() < 2 || args[0].empty() || args[1].empty())
+	// {
+	// 	client->reply("need more params");
+	// 	return;
+	// }
 
-// 	std::string target = args.at(0);
-// 	std::string message;
+	// std::string target = args.at(0);
+	// std::string message;
 
-// 	// iterate  args starting from the second one
-// 	for (auto iter = args.begin() + 1; iter != args.end(); ++iter)
-// 	{
-// 		// Access the current argument using '(*it)' and concatenate it to the message
-// 		message += *iter;
-// 	}
+	// // iterate  args starting from the second one
+	// for (std::vector<std::string>::iterator iter = args.begin() + 1; iter != args.end(); ++iter)
+	// {
+	// 	// Access the current argument using '(*it)' and concatenate it to the message
+	// 	message += *iter;
+	// }
 
-// 	if (message.at(0) == ':')
-// 		message = message.substr(1);
+	// if (message.at(0) == ':')
+	// 	message = message.substr(1);
 
-// 	// if notice is for a channel
-// 	if (target.at(0) == '#')
-// 	{
-// 		Channel *channel = client->get_channel();
+	// // if notice is for a channel
+	// if (target.at(0) == '#')
+	// {
+	// 	Channel *channel = client->get_channel();
 
-// 		// channel not found
-// 		if (!channel->ext_msg())
-// 		{
-// 			const std::vector<std::string> &nicknames = channel->get_nicknames(); // get all nicks registered in channel
+	// 	// channel not found
+	// 	if (!channel->ext_msg())
+	// 	{
+	// 		const std::vector<Client *> clients = channel->getClients(); // get all nicks registered in channel
 
-// 			// check client is in channel
-// 			// check if can use find from <algorithm>
-// 			auto iter = std::find(nicknames.begin(), nicknames.end(), client->get_nick());
+	// 		// check client is in channel
+	// 		// check if can use find from <algorithm>
+	// 		//std::vector<std::string>::iterator iter = std::find(nicknames.begin(), nicknames.end(), client->get_nick());
 
-// 			// not found
-// 			if (iter == nicknames.end())
-// 			{
-// 				client->reply("cant send to channel");
-// 				return;
-// 			}
-// 		}
-// 		// implement**
-// 		// channel->broadcast(RPL_PRIVMSG(client->get_prefix(), target, message), client);
-// 		return;
-// 	}
+	// 		// not found
+	// 		if (iter == nicknames.end())
+	// 		{
+	// 			client->reply("cant send to channel");
+	// 			return;
+	// 		}
+	// 	}
+	// 	// implement**
+	// 	// channel->broadcast(RPL_PRIVMSG(client->get_prefix(), target, message), client);
+	// 	return;
+	// }
 
-// 	// else if notice is for a client
-// 	Client *dest_client = serv->get_client(target);
-// 	if (!dest_client)
-// 	{
-// 		client->reply("no nickname found");
-// 		return;
-// 	}
+	// else if notice is for a client
+	// Client *dest_client = serv->get_client(target);
+	// if (!dest_client)
+	// {
+	// 	client->reply("no nickname found");
+	// 	return;
+	// }
 
-// 	dest_client->send("implement reply to client");
-// }
+	// dest_client->send("implement reply to client");
+}
 
 // QUIT [<message>]
 void QUIT::execute(Client *client, std::vector<std::string> args)
@@ -173,49 +176,55 @@ void QUIT::execute(Client *client, std::vector<std::string> args)
 	serv->on_client_disconnect(client->get_fd());
 }
 
-//  JOIN <channels> [<keys>]
-// void JOIN::execute(Client *client, std::vector<std::string> args)
-// {
-// 	if (args.empty())
-// 	{
-// 		client->reply("need more args");
-// 		return;
-// 	}
-// 	std::string name = args[0];
-// 	std::string pass = args.size() > 1 ? args[1] : "";
+//JOIN <channels> [<keys>]
+void JOIN::execute(Client *client, std::vector<std::string> args)
+{
+	if (args.empty())
+	{
+		client->reply("need more args");
+		return;
+	}
+	std::string name = args[0];
+	std::string pass = args.size() > 1 ? args[1] : "";
 
-// 	Channel *channel = client->get_channel();
-// 	if (channel)
-// 	{
-// 		client->reply("already in a channel");
-// 		return;
-// 	}
+	Channel *channel = client->get_channel();
+	if (channel)
+	{
+		client->reply("already in a channel");
+		return;
+	}
 
-// 	channel = serv->get_channel(name);
-// 	if (!channel)
-// 		channel = serv->create_channel(name, pass, client);
+	channel = serv->get_channel(name);
+	if (!channel)
+		channel = serv->create_channel(name, pass, client);
 
-// 	// checks channel has a user limit and if current number of users is more than limit
-// 	if (channel->get_limit() > 0 && channel->get_size() >= channel->get_limit())
-// 	{
-// 		client->reply("channel is full");
-// 		return;
-// 	}
+	// checks channel has a user limit and if current number of users is more than limit
+	// if (channel->getUserLimit() > 0 && channel->get_size() >= channel->get_limit())
+	// {
+	// 	client->reply("channel is full");
+	// 	return;
+	// }
 
-// 	if (channel->get_key() != pass)
-// 	{
-// 		client->reply("wrong channel key");
-// 		return;
-// 	}
+	if (channel->getKey() != pass)
+	{
+		client->reply("wrong channel key");
+		return;
+	}
 
-// 	client->join(channel);
-// }
+	//client->join(channel);
+}
 
-// void KILL::execute(Client *client, std::vector<std::string> args)
-// {
-// }
+void KILL::execute(Client *client, std::vector<std::string> args)
+{
+	(void)client;
+	(void)args;
+}
 
-
+void INVITE::execute(Client *client, std::vector<std::string> args)
+{
+	(void)client;
+	(void)args;
+}
 
 // destructors 
 Command::~Command() {}

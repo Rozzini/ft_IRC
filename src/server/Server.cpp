@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 15:23:06 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/25 17:51:47 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/27 17:54:39 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,21 +100,21 @@ Client*         Server::get_client(const std::string& nickname)
     return NULL;
 }
 
-// Channel*        Server::get_channel(const std::string& name)
-// {
-//     channel_iterator it_b = _channels.begin();
-//     channel_iterator it_e = _channels.begin();
+Channel*        Server::get_channel(const std::string& name)
+{
+    channel_iterator it_b = _channels.begin();
+    channel_iterator it_e = _channels.begin();
 
-//     while (it_b != it_e)
-//     {
-//         if (!name.compare((*it_b)->get_name()))
-//             return (*it_b);
+    while (it_b != it_e)
+    {
+        if (!name.compare((*it_b)->getName()))
+            return (*it_b);
 
-//         it_b++;
-//     }
+        it_b++;
+    }
 
-//     return NULL;
-// }
+    return NULL;
+}
 
 
 /* Handle Clients */
@@ -240,13 +240,13 @@ std::string     Server::read_message(int fd)
 
 /* Create Channel */
 
-// Channel*        Server::create_channel(const std::string& name, const std::string& key, Client* client)
-// {
-//     Channel *channel = new Channel(name, key, client);
-//     _channels.push_back(channel);
+Channel*        Server::create_channel(const std::string& name, const std::string& key, Client* client)
+{
+    Channel *channel = new Channel(name, key, client);
+    _channels.push_back(channel);
 
-//     return channel;
-// }
+    return channel;
+}
 
 
 /* Create Socket */
