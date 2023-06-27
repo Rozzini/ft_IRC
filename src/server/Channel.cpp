@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:41:28 by dkaratae          #+#    #+#             */
-/*   Updated: 2023/06/25 19:06:33 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/27 18:40:36 by dkaratae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,16 @@ void Channel::setKey(std::string key)
 std::string Channel::getKey()
 {
     return this->key;
+}
+
+int Channel::getCountClients()
+{
+    int countClients = 0;
+
+    for (unsigned long i = 0; i < this->clients.size(); i++)
+        countClients++;
+    
+    return countClients;
 }
 
 void Channel::setInviteOnly(bool inviteOnly)
