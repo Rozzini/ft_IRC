@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:44:41 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/27 17:35:50 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/28 19:05:57 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,7 @@ void            Parser::invoke(Client* client, const std::string& message)
 
             if (client->get_state() != 2 /*&& cmd->auth_required()*/)
             {
-                //client->reply(ERR_NOTREGISTERED(client->get_nick()));
-                std::cout << client->get_nick() << " GUGU GAGA!" <<std::endl;
+                std::cout << "451 " << client->get_nick() << " :You have not registered" <<std::endl;
                 return;
             }
 
@@ -92,8 +91,8 @@ void            Parser::invoke(Client* client, const std::string& message)
         }
         catch (const std::exception& e)
         {
-            //client->reply(ERR_UNKNOWNCOMMAND(client->get_nick(), name));
-            std::cout << client->get_nick() << " GAGA GUGU!" <<std::endl;
+            std::cout << "421 " << client->get_nick() << 
+            " " << name << " :Unknown command" << std::endl;
         }
     }
-}
+} 

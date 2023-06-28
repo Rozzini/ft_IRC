@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 19:10:46 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/27 17:19:43 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/28 19:11:15 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ public:
 	void set_nick(const std::string &nick);
 	void set_uname(const std::string &uname);
 	void set_name(const std::string &name);
+	void set_channel(Channel *channel);
 	// getters
 	int get_fd() const;
 	int get_port() const;

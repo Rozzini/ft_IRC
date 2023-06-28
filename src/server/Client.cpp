@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 19:10:46 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/27 17:19:24 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/28 19:25:46 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,11 @@ void Client::set_uname(const std::string &uname)
 void Client::set_name(const std::string &name)
 {
 	this->name = name;
+}
+
+void Client::set_channel(Channel *channel) 
+{
+	this->channel = channel;
 }
 
 // GETTERS
