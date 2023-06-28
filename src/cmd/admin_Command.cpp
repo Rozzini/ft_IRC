@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   admin_Command.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:07:38 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/25 19:07:29 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/28 19:51:52 by dkaratae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,11 +90,11 @@ void TOPIC::execute(Client *client, std::vector<std::string> args)
 // MODE <channel> <flags> [<args>]
 void MODE::execute(Client *client, std::vector<std::string> args)
 {
-	if (args.size() < 2)
-	{
-		client->reply("need more args");
-		return;
-	}
+	// if (args.size() < 2)
+	// {
+	// 	client->reply("need more args");
+	// 	return;
+	
 }
 
 ///INVITE <NICK> <channel>

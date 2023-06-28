@@ -6,7 +6,7 @@
 /*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:41:22 by dkaratae          #+#    #+#             */
-/*   Updated: 2023/06/27 18:40:13 by dkaratae         ###   ########.fr       */
+/*   Updated: 2023/06/28 19:25:40 by dkaratae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,16 @@ class Channel
         ~Channel();
 
 
-        void setMod(char m);
-        bool check_mode(char c);
+        // void setMod(char m);
+        // bool check_mode(char c);
     
         void setTopic(std::string topic);
         void setKey(std::string key);
+        void setMode(char modeFlag, char sign, std::string name);
 
         std::string getTopic();
         std::string getKey();
+        std::string getMode();
         int getCountClients();
 
         void setInviteOnly(bool inviteOnly);
@@ -59,6 +61,13 @@ class Channel
         std::string topic;
         std::string modes;
         std::string key;
+        std::string mode;
+        // char sign;
+        // bool i;
+        bool t;
+        bool k;
+        bool o;
+        bool l;
         bool inviteOnly;
         std::vector<Client *> clients;
         std::vector<Client *> operators;
