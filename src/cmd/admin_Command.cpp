@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   admin_Command.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:07:38 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/29 10:45:31 by dkaratae         ###   ########.fr       */
+/*   Updated: 2023/06/29 16:00:23 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void TOPIC::execute(Client *client, std::vector<std::string> args)
 {
 	if (args.size() < 1 || args.size() > 2)
 	{
-		client->reply("need more args");
+		client->reply(ERR_MOREPARAMS(client->get_nick(), "TOPIC"));
 		return;
 	}
 
@@ -68,14 +68,23 @@ void TOPIC::execute(Client *client, std::vector<std::string> args)
 	Channel *channel = serv->get_channel(channelName);
 	if (!channel)
 	{
-		client->reply("no channel found");
+		client->reply(ERR_NOSUCHCHANNEL(client->get_nick(), channel));
 		return;
 	}
-	// if (channel->check_mode('t') && channel->get_admin() != client)
-	// {
-	// 	client->reply("ur not admin");
-	// 	return;
-	// }
+	if (channel->check_mode('t') && channel->get_admin() != client)
+	{
+		std::vector<Client*> ops = channel->getOperators();
+		for (size_t i = 0; i < ops.size(); i++)
+		{
+			if (ops[i]->get_nick == client->get_nick)
+				break;
+		}
+		if (i < ops.size())
+		{
+			client->reply(ERR_OP_NEEDED(client->get_nick(), channel));
+			return;
+		}
+	}
 	else
 	{
 		std::string topic = args[1];
