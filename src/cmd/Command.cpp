@@ -6,13 +6,14 @@
 /*   By: alalmazr <alalmazr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 18:03:16 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/29 14:10:05 by alalmazr         ###   ########.fr       */
+/*   Updated: 2023/06/29 15:39:35 by alalmazr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Command.hpp"
 #include "../server/Server.hpp"
 
+class Client;
 // base class
 
 Command::Command(Server *server) : serv(server) {}
@@ -43,13 +44,13 @@ void PASS::execute(Client *client, std::vector<std::string> args)
 {
 	if (args.empty())
 	{
-		client->reply("need good pass");
+		client->reply(ERR_MOREPARAMS(client->get_nick(), "PASS"));
 		return;
 	}
 
 	if (client->get_state() == 2) //== registered )
 	{
-		client->reply(client->get_nick() + " is already registered");
+		client->reply(ERR_ALREADY_REG(client->get_nick()));
 		return;
 	}
 
@@ -59,7 +60,7 @@ void PASS::execute(Client *client, std::vector<std::string> args)
 
 	if (serv->get_password() != password)
 	{
-		client->reply("wrong password");
+		client->reply(ERR_PW(client->get_nick()));
 		return;
 	}
 
@@ -71,14 +72,14 @@ void NICK::execute(Client *client, std::vector<std::string> args)
 {
 	if (args.empty() || args[0].empty())
 	{
-		client->reply("no nickname given");
+		client->reply(ERR_NO_NICK(client->get_nick()));
 		return;
 	}
 
 	std::string nickname = args[0];
 	if (serv->get_client(nickname))
 	{
-		client->reply("nickname used");
+		client->reply(ERR_NICK_USED(client->get_nick()));
 		return;
 	}
 	client->set_nick(nickname);
@@ -90,13 +91,13 @@ void USER::execute(Client *client, std::vector<std::string> args)
 {
 	if (client->get_state() == 2)
 	{
-		client->reply(client->get_nick() + " is already registered");
+		client->reply(ERR_ALREADY_REG(client->get_nick()));
 		return;
 	}
 
 	if (args.size() < 4)
 	{
-		client->reply("args < 4");
+		client->reply(ERR_MOREPARAMS(client->get_nick(), "USER"));
 		return;
 	}
 
@@ -184,7 +185,7 @@ void JOIN::execute(Client *client, std::vector<std::string> args)
 {
 	if (args.empty())
 	{
-		client->reply("need more args");
+		client->reply(ERR_MOREPARAMS(client->get_nick(), "JOIN"));
 		return;
 	}
 	std::string name = args[0];
@@ -193,7 +194,7 @@ void JOIN::execute(Client *client, std::vector<std::string> args)
 	Channel *channel = client->get_channel();
 	if (channel)
 	{
-		client->reply("already in a channel");
+		client->reply(ERR_TOOMANYCHANNELS(client->get_nick(), name));
 		return;
 	}
 
@@ -202,15 +203,15 @@ void JOIN::execute(Client *client, std::vector<std::string> args)
 		channel = serv->create_channel(name, pass, client);
 
 	// checks channel has a user limit and if current number of users is more than limit
-	// if (channel->getUserLimit() > 0 && channel->get_size() >= channel->get_limit())
-	// {
-	// 	client->reply("channel is full");
-	// 	return;
-	// }
+	if (channel->getUserLimit() > 0 && channel->getCountClients() >= channel->getUserLimit())
+	{
+		client->reply(ERR_CHANNEL_FULL(client->get_nick(), name));
+		return;
+	}
 
 	if (channel->getKey() != pass)
 	{
-		client->reply("wrong channel key");
+		client->reply(ERR_CHANNELKEY(client->get_nick(), name));
 		return;
 	}
 

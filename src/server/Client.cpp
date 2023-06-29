@@ -6,7 +6,7 @@
 /*   By: alalmazr <alalmazr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 19:10:46 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/29 14:31:18 by alalmazr         ###   ########.fr       */
+/*   Updated: 2023/06/29 15:21:49 by alalmazr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,8 +117,7 @@ void Client::send(const std::string &msg) const
 // Reply to the client
 void Client::reply(const std::string &msg)
 {
-	this->write(":" + get_prefix() + " " + reply);
-	this->write(":" + get_prefix() + " " + reply);
+	this->send(":" + get_prefix() + " " + msg);
 }
 
 // irc welcome msg
@@ -153,7 +152,7 @@ void Client::join(Channel *channel)
 	//we need BROADCAST FOR CHANNEL
 	// log
 
-	std::string message = nick + " has joined to the channel " + channel->get_name();
+	std::string message = nick + " has joined to the channel " + channel->getName();
 	log(message);
 }
 
@@ -173,9 +172,9 @@ void Client::leave()
 
 std::string Client::get_prefix() const
 {
-	std::string uname = uname.empty() ? "" : "!" + uname;
-	std::string host = host.empty() ? "" : "@" + host;
+	std::string username = uname.empty() ? "" : "!" + uname;
+	std::string _host = host.empty() ? "" : "@" + this->host;
 
-	std::string result = nick + uname + host;
+	std::string result = nick + username + _host;
 	return result;
 }
