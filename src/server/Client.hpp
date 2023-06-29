@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: alalmazr <alalmazr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 19:10:46 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/29 16:01:53 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/29 17:18:37 by alalmazr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,15 @@ class Channel;
 #define ERR_MOREPARAMS(source, command)             "461 " + source + " " + command + " :Not enough parameters"
 
 #define ERR_TOOMANYCHANNELS(source, channel)            "405 " + source + " " + channel + " :You have joined too many channels"
-#define ERR_NOTONCHANNEL(source, channel)               "442 " + source + " " + channel + " :You're not on that channel"
+#define ERR_NOTONCHANNEL(source, channel)               "442 " + source + " " + channel + " :You're not on the channel"
 #define ERR_NOSUCHCHANNEL(source, channel)              "403 " + source + " " + channel + " :No such channel"
 #define ERR_CHANNELKEY(source, channel)              "475 " + source + " " + channel + " :Cannot join channel (+k)"
 #define ERR_CHANNEL_FULL(source, channel)              "471 " + source + " " + channel + " :Cannot join channel (+l)"
 #define ERR_CHAN(source, channel)           "404 " + source + " " + channel + " :Cannot send to channel"
 #define ERR_OP_NEEDED(source, channel)           "482 " + source + " " + channel + " :You're not channel operator"
 
-#define ERR_NO_EXISTING_NICK(source, nickname)                "401 " + source + " " + nickname + " :No such nick/channel"
-#define ERR_USERNOTINCHANNEL(source, nickname, channel) "441 " + source + " " + nickname + " " + channel + " :They aren't on that channel"
+#define ERR_NO_EXIST(source, nickname)                "401 " + source + " " + nickname + " :No such nick/channel"
+#define ERR_USERNOTINCHANNEL(source, nickname, channel) "441 " + source + " " + nickname + " " + channel + " :Not on channel"
 
 #define WELCOME(source)                             "001 " + source + " :Welcome " + source + " to the ft_irc network"
 #define NAMREPLY(source, channel, users)            "353 " + source + " = " + channel + " :" + users
@@ -124,7 +124,7 @@ public:
 	std::string get_host() const;
 
 	// send recieve actions
-	void send(const std::string &msg) const;
+	void write(const std::string &msg) const;
 	void reply(const std::string &msg);
 	// welcome msg as in irc
 	void welcome();

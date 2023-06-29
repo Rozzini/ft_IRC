@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:07:38 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/29 17:53:21 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/29 20:14:57 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void KICK::execute(Client *client, std::vector<std::string> args)
 {
 	if (args.size() < 2)
 	{
-		client->reply("need more args");
+		client->reply(ERR_MOREPARAMS(client->get_nick(), "KICK"));
 		std::cout << "NEED MORE ARGS" << std::endl;
 		return;
 	}
@@ -32,30 +32,30 @@ void KICK::execute(Client *client, std::vector<std::string> args)
 	Channel *channel = client->get_channel();
 	if (!channel || channel->getName() != name)
 	{
-		client->reply("u r not in channel/channel doesnt exist");
+		client->reply(ERR_NOTONCHANNEL(client->get_nick(), channel->getName()));
 		std::cout << "NOT IN CHANNEL/CHANNEL DOESNT EXIST" << std::endl;
 		return;
 	}
 	std::vector<Client *> operators = channel->getOperators();
 	for (unsigned long i = 0; i < operators.size(); i++)
-    {
-        if (operators[i]->get_nick() == client->get_nick())
-            break;
+	{
+		if (operators[i]->get_nick() == client->get_nick())
+			break;
 		if (i == operators.size() - 1)
 		{
-			client->reply("unauthorized to kick");
+			client->reply(ERR_OP_NEEDED(client->get_nick(), channel->getName()));
 			std::cout << "DOESNT HAVE RIGHTS TO KICK" << std::endl;
 			return;
 		}
-    }
+	}
 	Client *dest_client = serv->get_client(target);
 	if (!dest_client)
 	{
-		client->reply("user not found");
+		client->reply(ERR_NO_EXIST(client->get_nick(), dest_client->get_nick()));
 		std::cout << "NO SUCH USER" << std::endl;
 		return;
 	}
-	//channel->kick(client, dest_client, reason);
+	// channel->kick(client, dest_client, reason);
 	channel->removeClient(client);
 	std::cout << "CLIET REMOVED FROM CHANNEL" << std::endl;
 }
@@ -74,14 +74,14 @@ void TOPIC::execute(Client *client, std::vector<std::string> args)
 	Channel *channel = serv->get_channel(channelName);
 	if (!channel)
 	{
-		//client->reply(ERR_NOSUCHCHANNEL(client->get_nick(), channel));
+		client->reply(ERR_NOSUCHCHANNEL(client->get_nick(), channel));
 		std::cout << "NO SUCH CHANNEL" << std::endl;
 		return;
 	}
 	if (channel->check_mode('t') && channel->isOperator(client->get_nick()) == false)
 	{
 		size_t i = 0;
-		std::vector<Client*> ops = channel->getOperators();
+		std::vector<Client *> ops = channel->getOperators();
 		for (i = 0; i < ops.size(); i++)
 		{
 			if (ops[i]->get_nick() == client->get_nick())
@@ -89,7 +89,7 @@ void TOPIC::execute(Client *client, std::vector<std::string> args)
 		}
 		if (i < ops.size())
 		{
-			//client->reply(ERR_OP_NEEDED(client->get_nick(), channel));
+			client->reply(ERR_OP_NEEDED(client->get_nick(), channel));
 			std::cout << "NEED TO BE OPERATOR" << std::endl;
 			return;
 		}
@@ -113,19 +113,39 @@ void MODE::execute(Client *client, std::vector<std::string> args)
 {
 	if (args.size() < 2)
 	{
-		client->reply("need more args");
+		client->reply(ERR_MOREPARAMS(client->get_nick(), "MODE"));
 		return;
 	}
-	(void)client;
+
+	std::string target = args.at(0);
+	Channel *channel = serv->get_channel(target); // MODE on clients not implemented
+	if (!channel)
+	{
+		client->reply(ERR_NOSUCHCHANNEL(client->get_nick(), target));
+		return;
+	}
+	std::vector<Client *> ops = channel->getOperators();
+	size_t i = 0;
+	for (i = 0; i < ops.size(); i++)
+	{
+		if (ops[i]->get_nick() == client->get_nick())
+			break;
+	}
+	if (i < ops.size())
+	{
+		client->reply(ERR_OP_NEEDED(client->get_nick(), channel->getName()));
+		return;
+	}
+
 	Channel *ch;
 	Client *cl;
 	bool sign = false;
 	int j = 0;
 	char sign_ch = '0';
-	
+
 	ch = serv->get_channel(args[1]);
 	cl = serv->get_client(args[3]);
-	
+
 	for (unsigned int i = 0; i < args[2].size(); i++)
 	{
 		if (args[2][j] == '+' || args[2][j] == '-')
