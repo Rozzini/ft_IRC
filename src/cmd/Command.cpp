@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: alalmazr <alalmazr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 18:03:16 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/29 16:00:41 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/29 19:25:25 by alalmazr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@ class Client;
 
 Command::Command(Server *server) : serv(server) {}
 
-void	Command::execute(Client* client, std::vector<std::string> args)
+void Command::execute(Client *client, std::vector<std::string> args)
 {
 	(void)client;
 	(void)args;
 }
 
-//constructors
+// constructors
 JOIN::JOIN(Server *server) : Command(server) {}
 TOPIC::TOPIC(Server *server) : Command(server) {}
 MODE::MODE(Server *server) : Command(server) {}
@@ -37,7 +37,7 @@ PASS::PASS(Server *server) : Command(server) {}
 PM::PM(Server *server) : Command(server) {}
 QUIT::QUIT(Server *server) : Command(server) {}
 
-// child class 
+// child class
 
 // PASS <password>
 void PASS::execute(Client *client, std::vector<std::string> args)
@@ -94,82 +94,67 @@ void USER::execute(Client *client, std::vector<std::string> args)
 		client->reply(ERR_ALREADY_REG(client->get_nick()));
 		return;
 	}
-
 	if (args.size() < 4)
 	{
 		client->reply(ERR_MOREPARAMS(client->get_nick(), "USER"));
 		return;
 	}
-
 	client->set_uname(args[0]);
 	client->set_name(args[3]);
 	client->welcome();
 }
 
-//PRIVMSG <msgtarget> :<message>
+// PRIVMSG <msgtarget> :<message>
 void PM::execute(Client *client, std::vector<std::string> args)
 {
-	(void)client;
-	(void)args;
-	//ZOZI BLYAR FIX THIS SHIIIIIT
-	// if (args.size() < 2 || args[0].empty() || args[1].empty())
-	// {
-	// 	client->reply("need more params");
-	// 	return;
-	// }
+	if (args.size() < 2 || args[0].empty() || args[1].empty())
+	{
+		client->reply(ERR_MOREPARAMS(client->get_nick(), "PRIVMSG"));
+		return;
+	}
+	std::string target = args[0];
+	
+	std::string message;
+	std::vector<std::string>::iterator it = args.begin() + 1;
+    std::vector<std::string>::iterator end = args.end();
+    while (it != end)
+    {
+        message.append(*it + " ");
+        it++;
+    }
+	if (message.at(0) == ':')
+        message = message.substr(1);
 
-	// std::string target = args.at(0);
-	// std::string message;
-	// msg = utils::joinSplit(this->_args.begin() + 1, this->_args.end());
-	// std::vector<std::string>	pmu;
-	// pmu = utils::split(this->_args[0], ',');
-
-	// // iterate  args starting from the second one
-	// for (std::vector<std::string>::iterator iter = args.begin() + 1; iter != args.end(); ++iter)
-	// {
-	// 	// Access the current argument using '(*it)' and concatenate it to the message
-	// 	message += *iter;
-	// }
-
-	// if (message.at(0) == ':')
-	// 	message = message.substr(1);
-
-	// // if notice is for a channel
-	// if (target.at(0) == '#')
-	// {
-	// 	Channel *channel = client->get_channel();
-
-	// 	// channel not found
-	// 	if (!channel->ext_msg())
-	// 	{
-	// 		const std::vector<Client *> clients = channel->getClients(); // get all nicks registered in channel
-
-	// 		// check client is in channel
-	// 		// check if can use find from <algorithm>
-	// 		//std::vector<std::string>::iterator iter = std::find(nicknames.begin(), nicknames.end(), client->get_nick());
-
-	// 		// not found
-	// 		if (iter == nicknames.end())
-	// 		{
-	// 			client->reply("cant send to channel");
-	// 			return;
-	// 		}
-	// 	}
-	// 	// implement**
-	// 	// channel->broadcast(RPL_PRIVMSG(client->get_prefix(), target, message), client);
-	// 	return;
-	// }
-
-	// else if notice is for a client
-	// Client *dest_client = serv->get_client(target);
-	// if (!dest_client)
-	// {
-	// 	client->reply("no nickname found");
-	// 	return;
-	// }
-
-	// dest_client->send("implement reply to client");
+    if (target.at(0) == '#')//channel notice
+    {
+        Channel* channel = client->get_channel();
+        if (!channel)
+        {
+            client->reply(ERR_NOSUCHCHANNEL(client->get_nickname(), target));
+			return;
+        }
+        // channel is not for external messages
+        if (!channel->ext_msg())
+        {
+            if (!(channel->isClientInChannel(client->get_nick())))
+            {
+                client->reply(ERR_CANNOTSENDTOCHAN(client->get_nick(), target));
+                return;
+            }
+        }
+        channel->broadcast(RPLY_PM(client->get_prefix(), target, message), client);
+        return;
+    }
+    // else if notice is for a client
+    Client  *dest = serv->get_client(target);
+    if (!dest)
+    {
+        client->reply(ERR_NO_EXIST(client->get_nickname(), target));
+		return;
+    }
+    dest->write(RPL_PRIVMSG(client->get_prefix(), target, message));
 }
+
 
 // QUIT [<message>]
 void QUIT::execute(Client *client, std::vector<std::string> args)
@@ -180,7 +165,7 @@ void QUIT::execute(Client *client, std::vector<std::string> args)
 	serv->on_client_disconnect(client->get_fd());
 }
 
-//JOIN <channels> [<keys>]
+// JOIN <channels> [<keys>]
 void JOIN::execute(Client *client, std::vector<std::string> args)
 {
 	if (args.empty())
@@ -215,7 +200,7 @@ void JOIN::execute(Client *client, std::vector<std::string> args)
 		return;
 	}
 
-	//client->join(channel);
+	// client->join(channel);
 }
 
 void KILL::execute(Client *client, std::vector<std::string> args)
@@ -224,18 +209,19 @@ void KILL::execute(Client *client, std::vector<std::string> args)
 	(void)args;
 }
 
-//1) - check if client exist (return if no)
-//2)check if channel exist (return if no)
-//3)check if client already on chaneel (return if yes)
-//4)add client to channel
+// /INVITE <nickname> <channel>
+// 1) - check if client exist (return if no)
+// 2)check if channel exist (return if no)
+// 3)check if client already on chaneel (return if yes)
+// 4)add client to channel
 void INVITE::execute(Client *client, std::vector<std::string> args)
 {
 	Channel *ch;
 	Client *cl;
 
-	if (args.empty())
+	if (args != 2)
 	{
-		client->reply("need more args");
+		client->reply(ERR_MOREPARAMS(client->get_nick(), "INVITE"));
 		return;
 	}
 	if ((cl = serv->get_client(args[1])) != NULL)
@@ -244,27 +230,19 @@ void INVITE::execute(Client *client, std::vector<std::string> args)
 		{
 			if (!(ch->isClientInChannel(cl)))
 				ch->addClient(cl);
-			else
-			{
-				std::cout << "This client already exist in this channel!" << std::endl;
-				return;
-			}
 		}
 		else
 		{
-			std::cout << "There isn't exist such channel" << std::endl;
-			return;
+			client->reply(ERR_NO_EXIST(client->get_nick(), ch)) return;
 		}
 	}
 	else
 	{
-		std::cout << "There isn't exist such client" << std::endl;
-		return;
+		client->reply(ERR_NO_EXIST(client->get_nick(), ch)) return;
 	}
-	
 }
 
-// destructors 
+// destructors
 Command::~Command() {}
 PASS::~PASS() {}
 INVITE::~INVITE() {}

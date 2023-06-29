@@ -6,7 +6,7 @@
 /*   By: alalmazr <alalmazr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:07:38 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/29 17:01:14 by alalmazr         ###   ########.fr       */
+/*   Updated: 2023/06/29 17:49:40 by alalmazr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void KICK::execute(Client *client, std::vector<std::string> args)
 {
 	if (args.size() < 2)
 	{
-		client->reply("need more args");
+		client->reply(ERR_MOREPARAMS(client->get_nick(), "KICK"));
 		return;
 	}
 
@@ -31,7 +31,7 @@ void KICK::execute(Client *client, std::vector<std::string> args)
 	Channel *channel = client->get_channel();
 	if (!channel || channel->getName() != name)
 	{
-		client->reply("u r not in channel/channel doesnt exist");
+		client->reply(ERR_NOTONCHANNEL(client->get_nick(), channel));
 		return;
 	}
 	std::vector<Client *> operators = channel->getOperators();
@@ -41,14 +41,14 @@ void KICK::execute(Client *client, std::vector<std::string> args)
 			break;
 		if (i == operators.size() - 1)
 		{
-			client->reply("unauthorized to kick");
+			client->reply(ERR_OP_NEEDED(client->get_nick(), channel));
 			return;
 		}
 	}
 	Client *dest_client = serv->get_client(target);
 	if (!dest_client)
 	{
-		client->reply("user not found");
+		client->reply(ERR_NO_EXIST(client->get_nick(), dest_client->get_nick()));
 		return;
 	}
 	// channel->kick(client, dest_client, reason);
