@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 19:10:46 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/28 19:11:15 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/29 15:02:21 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ private:
 	std::string uname;
 	std::string name;
 	std::string host;
+	Channel *channel;
 	// add smth for the channel
 	// 0handshake 1login 2registed -1disconnected
 	int state;
