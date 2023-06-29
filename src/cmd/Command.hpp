@@ -29,19 +29,20 @@ protected:
     Server* serv;
     std::vector<std::string> args;
     std::string cmd;
-
+    bool auth;
     bool is_valid_mode(char c);
 
 public:
-    explicit Command(Server* server);
+    explicit Command(Server* server, bool auth = true);
     virtual ~Command();
+    bool need_auth() const;
     virtual void execute(Client* client, std::vector<std::string> args) = 0;
 };
 
 class PASS : public Command
 {
 public:
-    PASS(Server* server);
+    PASS(Server* server, bool auth);
     void execute(Client* client, std::vector<std::string> args);
     ~PASS();
 };
@@ -49,7 +50,7 @@ public:
 class NICK : public Command
 {
 public:
-    NICK(Server* server);
+    NICK(Server* server, bool auth);
     void execute(Client* client, std::vector<std::string> args);
     ~NICK();
 };
@@ -57,7 +58,7 @@ public:
 class USER : public Command
 {
 public:
-    USER(Server* server);
+    USER(Server* server, bool auth);
     void execute(Client* client, std::vector<std::string> args);
     ~USER();
 };
@@ -73,7 +74,7 @@ public:
 class QUIT : public Command
 {
 public:
-    QUIT(Server* server);
+    QUIT(Server* server, bool auth);
     void execute(Client* client, std::vector<std::string> args);
     ~QUIT();
 };

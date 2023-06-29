@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 18:03:16 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/29 20:12:11 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/29 20:40:14 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,17 @@
 class Client;
 // base class
 
-Command::Command(Server *server) : serv(server) {}
+Command::Command(Server *server, bool auth) : serv(server), auth(auth) {}
 
 void Command::execute(Client *client, std::vector<std::string> args)
 {
 	(void)client;
 	(void)args;
+}
+
+bool    Command::need_auth() const
+{
+	return this->auth; 
 }
 
 // constructors
@@ -31,11 +36,11 @@ MODE::MODE(Server *server) : Command(server) {}
 INVITE::INVITE(Server *server) : Command(server) {}
 KILL::KILL(Server *server) : Command(server) {}
 KICK::KICK(Server *server) : Command(server) {}
-USER::USER(Server *server) : Command(server) {}
-NICK::NICK(Server *server) : Command(server) {}
-PASS::PASS(Server *server) : Command(server) {}
 PM::PM(Server *server) : Command(server) {}
-QUIT::QUIT(Server *server) : Command(server) {}
+USER::USER(Server *server, bool auth) : Command(server, auth) {}
+NICK::NICK(Server *server, bool auth) : Command(server, auth) {}
+PASS::PASS(Server *server, bool auth) : Command(server, auth) {}
+QUIT::QUIT(Server *server, bool auth) : Command(server, auth) {}
 
 // child class
 

@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:07:38 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/29 20:14:57 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/29 20:17:54 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void TOPIC::execute(Client *client, std::vector<std::string> args)
 	Channel *channel = serv->get_channel(channelName);
 	if (!channel)
 	{
-		client->reply(ERR_NOSUCHCHANNEL(client->get_nick(), channel));
+		//client->reply(ERR_NOSUCHCHANNEL(client->get_nick(), channel));
 		std::cout << "NO SUCH CHANNEL" << std::endl;
 		return;
 	}
@@ -89,7 +89,7 @@ void TOPIC::execute(Client *client, std::vector<std::string> args)
 		}
 		if (i < ops.size())
 		{
-			client->reply(ERR_OP_NEEDED(client->get_nick(), channel));
+			//client->reply(ERR_OP_NEEDED(client->get_nick(), channel));
 			std::cout << "NEED TO BE OPERATOR" << std::endl;
 			return;
 		}
