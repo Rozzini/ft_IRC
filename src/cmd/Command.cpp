@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 18:03:16 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/28 14:49:53 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/29 14:57:36 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,10 +220,44 @@ void KILL::execute(Client *client, std::vector<std::string> args)
 	(void)args;
 }
 
+//1) - check if client exist (return if no)
+//2)check if channel exist (return if no)
+//3)check if client already on chaneel (return if yes)
+//4)add client to channel
 void INVITE::execute(Client *client, std::vector<std::string> args)
 {
-	(void)client;
-	(void)args;
+	Channel *ch;
+	Client *cl;
+
+	if (args.empty())
+	{
+		client->reply("need more args");
+		return;
+	}
+	if ((cl = serv->get_client(args[1])) != NULL)
+	{
+		if ((ch = serv->get_channel(args[2])) != NULL)
+		{
+			if (!(ch->isClientInChannel(cl)))
+				ch->addClient(cl);
+			else
+			{
+				std::cout << "This client already exist in this channel!" << std::endl;
+				return;
+			}
+		}
+		else
+		{
+			std::cout << "There isn't exist such channel" << std::endl;
+			return;
+		}
+	}
+	else
+	{
+		std::cout << "There isn't exist such client" << std::endl;
+		return;
+	}
+	
 }
 
 // destructors 
