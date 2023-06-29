@@ -6,7 +6,7 @@
 /*   By: alalmazr <alalmazr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 18:03:16 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/29 19:25:25 by alalmazr         ###   ########.fr       */
+/*   Updated: 2023/06/29 19:59:23 by alalmazr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,29 +130,29 @@ void PM::execute(Client *client, std::vector<std::string> args)
         Channel* channel = client->get_channel();
         if (!channel)
         {
-            client->reply(ERR_NOSUCHCHANNEL(client->get_nickname(), target));
+            client->reply(ERR_NOSUCHCHANNEL(client->get_nick(), target));
 			return;
         }
         // channel is not for external messages
-        if (!channel->ext_msg())
-        {
-            if (!(channel->isClientInChannel(client->get_nick())))
+        // if (!channel->ext_msg())
+        // {
+            if (!(channel->isClientInChannel(client)))
             {
-                client->reply(ERR_CANNOTSENDTOCHAN(client->get_nick(), target));
+                client->reply(ERR_CHAN(client->get_nick(), target));
                 return;
             }
-        }
-        channel->broadcast(RPLY_PM(client->get_prefix(), target, message), client);
+        // }
+        // channel->broadcast(RPLY_PM(client->get_prefix(), target, message), client);
         return;
     }
     // else if notice is for a client
     Client  *dest = serv->get_client(target);
     if (!dest)
     {
-        client->reply(ERR_NO_EXIST(client->get_nickname(), target));
+        client->reply(ERR_NO_EXIST(client->get_nick(), target));
 		return;
     }
-    dest->write(RPL_PRIVMSG(client->get_prefix(), target, message));
+    dest->write(RPLY_PM(client->get_prefix(), target, message));
 }
 
 
@@ -161,7 +161,7 @@ void QUIT::execute(Client *client, std::vector<std::string> args)
 {
 	// if args empty set reason to leaving, if not empty check at [0][0] if ':' then take string without first char
 	std::string reason = args.empty() ? "leaving!!!" : (args.at(0)[0] == ':' ? args.at(0).substr(1) : args.at(0));
-	client->send("leaving because " + reason);
+	client->write("leaving because " + reason);
 	serv->on_client_disconnect(client->get_fd());
 }
 
@@ -216,10 +216,10 @@ void KILL::execute(Client *client, std::vector<std::string> args)
 // 4)add client to channel
 void INVITE::execute(Client *client, std::vector<std::string> args)
 {
-	Channel *ch;
-	Client *cl;
+	Channel *ch = NULL;
+	Client *cl = NULL;
 
-	if (args != 2)
+	if (args.size() != 2)
 	{
 		client->reply(ERR_MOREPARAMS(client->get_nick(), "INVITE"));
 		return;
@@ -233,12 +233,14 @@ void INVITE::execute(Client *client, std::vector<std::string> args)
 		}
 		else
 		{
-			client->reply(ERR_NO_EXIST(client->get_nick(), ch)) return;
+			client->reply(ERR_NO_EXIST(client->get_nick(), cl->get_nick()));
+			 return;
 		}
 	}
 	else
 	{
-		client->reply(ERR_NO_EXIST(client->get_nick(), ch)) return;
+		client->reply(ERR_NOSUCHCHANNEL(client->get_nick(), ch->getName()));
+		 return;
 	}
 }
 

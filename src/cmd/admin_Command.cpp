@@ -6,7 +6,7 @@
 /*   By: alalmazr <alalmazr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:07:38 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/29 17:49:40 by alalmazr         ###   ########.fr       */
+/*   Updated: 2023/06/29 20:05:56 by alalmazr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void KICK::execute(Client *client, std::vector<std::string> args)
 	Channel *channel = client->get_channel();
 	if (!channel || channel->getName() != name)
 	{
-		client->reply(ERR_NOTONCHANNEL(client->get_nick(), channel));
+		client->reply(ERR_NOTONCHANNEL(client->get_nick(), channel->getName()));
 		return;
 	}
 	std::vector<Client *> operators = channel->getOperators();
@@ -41,7 +41,7 @@ void KICK::execute(Client *client, std::vector<std::string> args)
 			break;
 		if (i == operators.size() - 1)
 		{
-			client->reply(ERR_OP_NEEDED(client->get_nick(), channel));
+			client->reply(ERR_OP_NEEDED(client->get_nick(), channel->getName()));
 			return;
 		}
 	}
@@ -68,7 +68,7 @@ void TOPIC::execute(Client *client, std::vector<std::string> args)
 	Channel *channel = serv->get_channel(channelName);
 	if (!channel)
 	{
-		// client->reply(ERR_NOSUCHCHANNEL(client->get_nick(), channel));
+		client->reply(ERR_NOSUCHCHANNEL(client->get_nick(), channel->getName()));
 		return;
 	}
 	if (channel->check_mode('t') && channel->isOperator(client->get_nick()) == false)
@@ -82,7 +82,7 @@ void TOPIC::execute(Client *client, std::vector<std::string> args)
 		}
 		if (i < ops.size())
 		{
-			// client->reply(ERR_OP_NEEDED(client->get_nick(), channel));
+			client->reply(ERR_OP_NEEDED(client->get_nick(), channel->getName()));
 			return;
 		}
 	}
@@ -112,12 +112,19 @@ void MODE::execute(Client *client, std::vector<std::string> args)
 	Channel *channel = serv->get_channel(target); // MODE on clients not implemented
 	if (!channel)
 	{
-		client->reply(ERR_NOSUCHCHANNEL(client->get_nickname(), target));
+		client->reply(ERR_NOSUCHCHANNEL(client->get_nick(), target));
 		return;
 	}
-	if (channel->getOperators() != client)
+	std::vector<Client *> ops = channel->getOperators();
+	size_t i = 0;
+	for (i = 0; i < ops.size(); i++)
 	{
-		client->reply(ERR_CHANOPRIVSNEEDED(client->get_nickname(), target));
+		if (ops[i]->get_nick() == client->get_nick())
+			break;
+	}
+	if (i < ops.size())
+	{
+		client->reply(ERR_OP_NEEDED(client->get_nick(), channel->getName()));
 		return;
 	}
 
