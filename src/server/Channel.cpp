@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:41:28 by dkaratae          #+#    #+#             */
-/*   Updated: 2023/06/29 16:58:39 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 02:33:52 by dkaratae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,8 @@ Channel::Channel (std::string channelName, std::string key, Client *client)
     this->key = key;
     this->inviteOnly = false;
     this->userLimit = -1;
-    // this->sign = false;
-    // this->i = false;
-    this->t = false;
-    // this->k = false;
-    // this->o = false;
-    // this->l = false;
-     this->setOperator(client, true);
+    this->boolTopic = false;
+    this->setOperator(client, true);
 }
 
 Channel::~Channel() {}
@@ -50,26 +45,80 @@ bool Channel::check_mode(char c)
     return true;
 }
 
-void Channel::setMode(char modeFlag, char sign, Client *client)
+void Channel::setModeI(char sign)
 {
-    if (sign == '+' && modeFlag == 'i')
+    if (sign == '+')
+    {
         inviteOnly = false;
-    else if (sign == '-' && modeFlag == 'i')
+        std::cout << "inviteOnly = false;" << std::endl;
+    }
+    else if (sign == '-')
+    {
         inviteOnly = true;
-    else if (sign == '+' && modeFlag == 't')
-        t = true;
-    else if (sign == '-' && modeFlag == 't')
-        t = false;
-    else if (sign == '-' && modeFlag == 'k')
-        key = "";
-    else if (sign == '+' && modeFlag == 'o')
-        setOperator(client, true);
-    else if (sign == '-' && modeFlag == 'o')
-        setOperator(client, false);
-    else if (sign == '-' && modeFlag == 'l')
-        setUserLimit(-1);
-        
+        std::cout << " inviteOnly = true;" << std::endl;
+    }
 }
+void Channel::setModeT(char sign)
+{
+    if (sign == '+')
+    {
+        boolTopic = true;
+        std::cout << "boolTopic = true;" << std::endl;
+    }
+    else if (sign == '-')
+    {
+        boolTopic = false;
+        std::cout << "boolTopic = false;" << std::endl;
+    }
+}
+
+void Channel::setModeK(char sign, std::string key)
+{
+    if (sign == '+')
+    {
+        this->key = key;
+        std::cout << "this->key = key;" << std::endl;
+    }
+    else if (sign == '-')
+    {
+        key = "";
+        std::cout << "key = "";" << std::endl;
+    }
+}
+
+void Channel::setModeO(char sign, Client *client)
+{
+    if (sign == '+')
+    {
+        setOperator(client, true);
+        std::cout << "etOperator(client, true);" << std::endl;
+    }
+    else if (sign == '-')
+    {
+        setOperator(client, false);
+        std::cout << "setOperator(client, false);" << std::endl;
+    }
+}
+
+void Channel::setModeL(char sign, int limit)
+{
+    if (sign == '+')
+    {
+        if (limit > getCountClients())
+            std::cout << "Not possible because the limit less then clients in the Channel" << std::endl;
+        else
+        {
+            setUserLimit(limit);
+            std::cout << "setUserLimit(limit);" << std::endl;
+        }
+    }
+    else if (sign == '-')
+    {
+        setUserLimit(-1);
+        std::cout << "s setUserLimit(-1);" << std::endl;
+    }
+}
+
 
 void Channel::setName(std::string name)
 {
@@ -98,7 +147,7 @@ std::vector<Client *> Channel::getClients()
     
 void Channel::setTopic(std::string topic)
 {
-    if (t)
+    if (boolTopic)
         this->topic = topic;
 }
 
@@ -127,15 +176,25 @@ int Channel::getCountClients()
     return countClients;
 }
 
+bool Channel::getInviteOnly()
+{
+    return this->inviteOnly;
+}
+
+bool Channel::getBoolTopic()
+{
+    return boolTopic;
+}
+
 void Channel::setInviteOnly(bool inviteOnly)
 {
     this->inviteOnly = inviteOnly;
 }
 
-bool Channel::isInviteOnly()
-{
-    return this->inviteOnly;
-}
+// bool Channel::isInviteOnly()
+// {
+//     return this->inviteOnly;
+// }
 
 void Channel::setOperator(Client *client, bool isOperator)
 {
@@ -179,6 +238,7 @@ int Channel::getUserLimit()
 void Channel::addClient(Client *client)
 {
     this->clients.push_back(client);
+    std::cout << client->get_nick() << " added to Channel!" << std::endl;
 }
 
 void Channel::removeClient(Client *client)
