@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:44:41 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/29 16:00:50 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/29 16:46:06 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,11 +81,11 @@ void            Parser::invoke(Client* client, const std::string& message)
                 args.push_back(buf);
 
 
-            if (client->get_state() != 2 /*&& cmd->auth_required()*/)
-            {
-                std::cout << "451 " << client->get_nick() << " :You have not registered" <<std::endl;
-                return;
-            }
+            // if (client->get_state() != 2 /*&& cmd->auth_required()*/)
+            // {
+            //     std::cout << "451 " << client->get_nick() << " :You have not registered" <<std::endl;
+            //     return;
+            // }
 
             cmd->execute(client, args);
         }
