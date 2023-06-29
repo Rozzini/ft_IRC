@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   admin_Command.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: alalmazr <alalmazr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:07:38 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/29 16:22:00 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/29 17:01:14 by alalmazr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,22 +36,22 @@ void KICK::execute(Client *client, std::vector<std::string> args)
 	}
 	std::vector<Client *> operators = channel->getOperators();
 	for (unsigned long i = 0; i < operators.size(); i++)
-    {
-        if (operators[i]->get_nick() == client->get_nick())
-            break;
+	{
+		if (operators[i]->get_nick() == client->get_nick())
+			break;
 		if (i == operators.size() - 1)
 		{
 			client->reply("unauthorized to kick");
 			return;
 		}
-    }
+	}
 	Client *dest_client = serv->get_client(target);
 	if (!dest_client)
 	{
 		client->reply("user not found");
 		return;
 	}
-	//channel->kick(client, dest_client, reason);
+	// channel->kick(client, dest_client, reason);
 	channel->removeClient(client);
 }
 
@@ -68,13 +68,13 @@ void TOPIC::execute(Client *client, std::vector<std::string> args)
 	Channel *channel = serv->get_channel(channelName);
 	if (!channel)
 	{
-		//client->reply(ERR_NOSUCHCHANNEL(client->get_nick(), channel));
+		// client->reply(ERR_NOSUCHCHANNEL(client->get_nick(), channel));
 		return;
 	}
 	if (channel->check_mode('t') && channel->isOperator(client->get_nick()) == false)
 	{
 		size_t i = 0;
-		std::vector<Client*> ops = channel->getOperators();
+		std::vector<Client *> ops = channel->getOperators();
 		for (i = 0; i < ops.size(); i++)
 		{
 			if (ops[i]->get_nick() == client->get_nick())
@@ -82,7 +82,7 @@ void TOPIC::execute(Client *client, std::vector<std::string> args)
 		}
 		if (i < ops.size())
 		{
-			//client->reply(ERR_OP_NEEDED(client->get_nick(), channel));
+			// client->reply(ERR_OP_NEEDED(client->get_nick(), channel));
 			return;
 		}
 	}
@@ -102,20 +102,34 @@ void TOPIC::execute(Client *client, std::vector<std::string> args)
 // MODE <channel> <flags> [<args>]
 void MODE::execute(Client *client, std::vector<std::string> args)
 {
-	// if (args.size() < 2)
-	// {
-	// 	client->reply("need more args");
-	// 	return;
-	(void)client;
+	if (args.size() < 2)
+	{
+		client->reply(ERR_MOREPARAMS(client->get_nick(), "MODE"));
+		return;
+	}
+
+	std::string target = args.at(0);
+	Channel *channel = serv->get_channel(target); // MODE on clients not implemented
+	if (!channel)
+	{
+		client->reply(ERR_NOSUCHCHANNEL(client->get_nickname(), target));
+		return;
+	}
+	if (channel->getOperators() != client)
+	{
+		client->reply(ERR_CHANOPRIVSNEEDED(client->get_nickname(), target));
+		return;
+	}
+
 	Channel *ch;
 	Client *cl;
 	bool sign = false;
 	int j = 0;
 	char sign_ch = '0';
-	
+
 	ch = serv->get_channel(args[1]);
 	cl = serv->get_client(args[3]);
-	
+
 	for (unsigned int i = 0; i < args[2].size(); i++)
 	{
 		if (args[2][j] == '+' || args[2][j] == '-')
@@ -136,11 +150,10 @@ void MODE::execute(Client *client, std::vector<std::string> args)
 			ch->setUserLimit(stoi(args[3]));
 			ch->setMode(args[2][j], sign_ch, cl);
 		}
-		
 	}
 }
 
-///INVITE <NICK> <channel>
+/// INVITE <NICK> <channel>
 // void INVITE::execute(Client* client, std::vector<std::string> args)
 // {
 // 	if (args.size() != 2)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: alalmazr <alalmazr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 19:10:46 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/29 16:01:53 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/29 17:05:37 by alalmazr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ public:
 	std::string get_host() const;
 
 	// send recieve actions
-	void send(const std::string &msg) const;
+	void write(const std::string &msg) const;
 	void reply(const std::string &msg);
 	// welcome msg as in irc
 	void welcome();

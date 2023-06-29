@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: alalmazr <alalmazr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 19:10:46 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/29 16:01:41 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/29 17:07:36 by alalmazr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,16 +108,17 @@ Channel *Client::get_channel()
 	return NULL;
 }
 // send msd
-void Client::send(const std::string &msg) const
+void Client::write(const std::string &msg) const
 {
-	std::string a = msg;
-	// implement send
+    std::string buff = msg + "\r\n";
+    if (send(fd, buff.c_str(), buff.length(), 0) < 0)
+        throw std::runtime_error("Error while sending a message to a client!");
 }
 
 // Reply to the client
 void Client::reply(const std::string &msg)
 {
-	this->send(":" + get_prefix() + " " + msg);
+	this->write(":" + get_prefix() + " " + msg);
 }
 
 // irc welcome msg
