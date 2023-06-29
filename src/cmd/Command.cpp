@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alalmazr <alalmazr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 18:03:16 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/29 19:59:23 by alalmazr         ###   ########.fr       */
+/*   Updated: 2023/06/29 20:12:11 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,14 @@ void PASS::execute(Client *client, std::vector<std::string> args)
 	if (args.empty())
 	{
 		client->reply(ERR_MOREPARAMS(client->get_nick(), "PASS"));
+		std::cout << "MORE PARAMS PLS" << std::endl;
 		return;
 	}
 
 	if (client->get_state() == 2) //== registered )
 	{
 		client->reply(ERR_ALREADY_REG(client->get_nick()));
+		std::cout << "ALREADY REGISTERED" << std::endl;
 		return;
 	}
 
@@ -61,10 +63,12 @@ void PASS::execute(Client *client, std::vector<std::string> args)
 	if (serv->get_password() != password)
 	{
 		client->reply(ERR_PW(client->get_nick()));
+		std::cout << "WRONG SERV PASS" << std::endl;
 		return;
 	}
 
-	client->set_state(1); // 1 = login
+	client->set_state(2); // 1 = registered
+	std::cout << "LOGED IN" << std::endl;
 }
 
 // NICK <nickname>
@@ -73,6 +77,7 @@ void NICK::execute(Client *client, std::vector<std::string> args)
 	if (args.empty() || args[0].empty())
 	{
 		client->reply(ERR_NO_NICK(client->get_nick()));
+		std::cout << "MORE PARAMS PLS" << std::endl;
 		return;
 	}
 
@@ -80,10 +85,12 @@ void NICK::execute(Client *client, std::vector<std::string> args)
 	if (serv->get_client(nickname))
 	{
 		client->reply(ERR_NICK_USED(client->get_nick()));
+		std::cout << "NAME TAKEN" << std::endl;
 		return;
 	}
 	client->set_nick(nickname);
 	client->welcome();
+	std::cout << "WHALE CUM" << std::endl;
 }
 
 //  USER <username> <hostname> <servername> <realname>
@@ -92,11 +99,13 @@ void USER::execute(Client *client, std::vector<std::string> args)
 	if (client->get_state() == 2)
 	{
 		client->reply(ERR_ALREADY_REG(client->get_nick()));
+		std::cout << "REGISTERED" << std::endl;
 		return;
 	}
 	if (args.size() < 4)
 	{
 		client->reply(ERR_MOREPARAMS(client->get_nick(), "USER"));
+		std::cout << "MORE PARAMS PLS" << std::endl;
 		return;
 	}
 	client->set_uname(args[0]);
@@ -190,17 +199,18 @@ void JOIN::execute(Client *client, std::vector<std::string> args)
 	// checks channel has a user limit and if current number of users is more than limit
 	if (channel->getUserLimit() > 0 && channel->getCountClients() >= channel->getUserLimit())
 	{
-		client->reply(ERR_CHANNEL_FULL(client->get_nick(), name));
+		//client->reply(ERR_CHANNEL_FULL(client->get_nick(), name));
+		std::cout << "CHANNEL FULL" << std::endl;
 		return;
 	}
-
 	if (channel->getKey() != pass)
 	{
-		client->reply(ERR_CHANNELKEY(client->get_nick(), name));
+		//client->reply(ERR_CHANNELKEY(client->get_nick(), name));
+		std::cout << "WRONG CHANNEL KEY" << std::endl;
 		return;
 	}
 
-	// client->join(channel);
+	client->join(channel);
 }
 
 void KILL::execute(Client *client, std::vector<std::string> args)
@@ -209,42 +219,7 @@ void KILL::execute(Client *client, std::vector<std::string> args)
 	(void)args;
 }
 
-// /INVITE <nickname> <channel>
-// 1) - check if client exist (return if no)
-// 2)check if channel exist (return if no)
-// 3)check if client already on chaneel (return if yes)
-// 4)add client to channel
-void INVITE::execute(Client *client, std::vector<std::string> args)
-{
-	Channel *ch = NULL;
-	Client *cl = NULL;
-
-	if (args.size() != 2)
-	{
-		client->reply(ERR_MOREPARAMS(client->get_nick(), "INVITE"));
-		return;
-	}
-	if ((cl = serv->get_client(args[1])) != NULL)
-	{
-		if ((ch = serv->get_channel(args[2])) != NULL)
-		{
-			if (!(ch->isClientInChannel(cl)))
-				ch->addClient(cl);
-		}
-		else
-		{
-			client->reply(ERR_NO_EXIST(client->get_nick(), cl->get_nick()));
-			 return;
-		}
-	}
-	else
-	{
-		client->reply(ERR_NOSUCHCHANNEL(client->get_nick(), ch->getName()));
-		 return;
-	}
-}
-
-// destructors
+// destructors 
 Command::~Command() {}
 PASS::~PASS() {}
 INVITE::~INVITE() {}

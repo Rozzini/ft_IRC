@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   admin_Command.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alalmazr <alalmazr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:07:38 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/29 20:05:56 by alalmazr         ###   ########.fr       */
+/*   Updated: 2023/06/29 20:14:57 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void KICK::execute(Client *client, std::vector<std::string> args)
 	if (args.size() < 2)
 	{
 		client->reply(ERR_MOREPARAMS(client->get_nick(), "KICK"));
+		std::cout << "NEED MORE ARGS" << std::endl;
 		return;
 	}
 
@@ -32,6 +33,7 @@ void KICK::execute(Client *client, std::vector<std::string> args)
 	if (!channel || channel->getName() != name)
 	{
 		client->reply(ERR_NOTONCHANNEL(client->get_nick(), channel->getName()));
+		std::cout << "NOT IN CHANNEL/CHANNEL DOESNT EXIST" << std::endl;
 		return;
 	}
 	std::vector<Client *> operators = channel->getOperators();
@@ -42,6 +44,7 @@ void KICK::execute(Client *client, std::vector<std::string> args)
 		if (i == operators.size() - 1)
 		{
 			client->reply(ERR_OP_NEEDED(client->get_nick(), channel->getName()));
+			std::cout << "DOESNT HAVE RIGHTS TO KICK" << std::endl;
 			return;
 		}
 	}
@@ -49,10 +52,12 @@ void KICK::execute(Client *client, std::vector<std::string> args)
 	if (!dest_client)
 	{
 		client->reply(ERR_NO_EXIST(client->get_nick(), dest_client->get_nick()));
+		std::cout << "NO SUCH USER" << std::endl;
 		return;
 	}
 	// channel->kick(client, dest_client, reason);
 	channel->removeClient(client);
+	std::cout << "CLIET REMOVED FROM CHANNEL" << std::endl;
 }
 
 // TOPIC <channel> [<topicname>]
@@ -61,6 +66,7 @@ void TOPIC::execute(Client *client, std::vector<std::string> args)
 	if (args.size() < 1 || args.size() > 2)
 	{
 		client->reply(ERR_MOREPARAMS(client->get_nick(), "TOPIC"));
+		std::cout << "NEED MORE PARAMS" << std::endl;
 		return;
 	}
 
@@ -68,7 +74,8 @@ void TOPIC::execute(Client *client, std::vector<std::string> args)
 	Channel *channel = serv->get_channel(channelName);
 	if (!channel)
 	{
-		client->reply(ERR_NOSUCHCHANNEL(client->get_nick(), channel->getName()));
+		client->reply(ERR_NOSUCHCHANNEL(client->get_nick(), channel));
+		std::cout << "NO SUCH CHANNEL" << std::endl;
 		return;
 	}
 	if (channel->check_mode('t') && channel->isOperator(client->get_nick()) == false)
@@ -82,7 +89,8 @@ void TOPIC::execute(Client *client, std::vector<std::string> args)
 		}
 		if (i < ops.size())
 		{
-			client->reply(ERR_OP_NEEDED(client->get_nick(), channel->getName()));
+			client->reply(ERR_OP_NEEDED(client->get_nick(), channel));
+			std::cout << "NEED TO BE OPERATOR" << std::endl;
 			return;
 		}
 	}
@@ -94,6 +102,7 @@ void TOPIC::execute(Client *client, std::vector<std::string> args)
 	if (args.size() == 1)
 	{
 		std::string topic = "The topic of " + channelName + " is " + channel->getTopic();
+		std::cout << "TOPIC SETTED: " << topic << std::endl;
 		client->reply(topic);
 	}
 }
@@ -160,7 +169,49 @@ void MODE::execute(Client *client, std::vector<std::string> args)
 	}
 }
 
-/// INVITE <NICK> <channel>
+
+//1) - check if client exist (return if no)
+//2)check if channel exist (return if no)
+//3)check if client already on chaneel (return if yes)
+//4)add client to channel
+void INVITE::execute(Client *client, std::vector<std::string> args)
+{
+	Channel *ch;
+	Client *cl;
+
+	if (args.empty())
+	{
+		client->reply("need more args");
+		std::cout << "NEED MORE ARGS" << std::endl;
+		return;
+	}
+	if ((cl = serv->get_client(args[1])) != NULL)
+	{
+		if ((ch = serv->get_channel(args[2])) != NULL)
+		{
+			if (!(ch->isClientInChannel(cl)))
+				ch->addClient(cl);
+			else
+			{
+				std::cout << "This client already exist in this channel!" << std::endl;
+				return;
+			}
+		}
+		else
+		{
+			std::cout << "There isn't exist such channel" << std::endl;
+			return;
+		}
+	}
+	else
+	{
+		std::cout << "There isn't exist such client" << std::endl;
+		return;
+	}
+	
+}
+
+///INVITE <NICK> <channel>
 // void INVITE::execute(Client* client, std::vector<std::string> args)
 // {
 // 	if (args.size() != 2)

@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 15:23:06 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/29 16:01:59 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/29 19:07:30 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ void            Server::start()
     }
 }
 
-
 /* Getters */
 
 std::string     Server::get_password() const 
@@ -103,16 +102,18 @@ Client*         Server::get_client(const std::string& nickname)
 Channel*        Server::get_channel(const std::string& name)
 {
     channel_iterator it_b = _channels.begin();
-    channel_iterator it_e = _channels.begin();
+    channel_iterator it_e = _channels.end();
 
+    std::cout << "CHANNEL THAT TRYING TO JOIN:  " << name << std::endl;
     while (it_b != it_e)
     {
+         std::cout << "CHANNEL NAME: " << (*it_b)->getName() << std::endl;
         if (!name.compare((*it_b)->getName()))
             return (*it_b);
 
         it_b++;
     }
-
+    std::cout << "RETURNIN NULL CHANNEL" << std::endl;
     return NULL;
 }
 
@@ -241,7 +242,7 @@ Channel*        Server::create_channel(const std::string& name, const std::strin
 {
     Channel *channel = new Channel(name, key, client);
     _channels.push_back(channel);
-
+    std::cout << "Channel Created!!!" << std::endl;
     return channel;
 }
 

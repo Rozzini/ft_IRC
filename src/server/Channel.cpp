@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:41:28 by dkaratae          #+#    #+#             */
-/*   Updated: 2023/06/29 16:18:33 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/29 16:58:39 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ Channel::Channel (std::string channelName, std::string key, Client *client)
     // this->k = false;
     // this->o = false;
     // this->l = false;
-    operators[0] = client;
+     this->setOperator(client, true);
 }
 
 Channel::~Channel() {}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alalmazr <alalmazr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 19:10:46 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/29 17:07:36 by alalmazr         ###   ########.fr       */
+/*   Updated: 2023/06/29 20:10:06 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,9 +152,9 @@ void Client::join(Channel *channel)
 	// channel->(RPL_JOIN(get_prefix(), channel->get_name()));
 	//we need BROADCAST FOR CHANNEL
 	// log
-
-	std::string message = nick + " has joined to the channel " + channel->getName();
-	log(message);
+	std::cout << "JOINED!!!" << std::endl;
+	//std::string message = nick + " has joined to the channel " + channel->getName();
+	//log(message);
 }
 
 void Client::leave()
