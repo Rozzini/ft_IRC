@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: alalmazr <alalmazr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 18:03:16 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/27 17:55:03 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/29 14:10:05 by alalmazr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,9 @@ void PM::execute(Client *client, std::vector<std::string> args)
 
 	// std::string target = args.at(0);
 	// std::string message;
+	// msg = utils::joinSplit(this->_args.begin() + 1, this->_args.end());
+	// std::vector<std::string>	pmu;
+	// pmu = utils::split(this->_args[0], ',');
 
 	// // iterate  args starting from the second one
 	// for (std::vector<std::string>::iterator iter = args.begin() + 1; iter != args.end(); ++iter)

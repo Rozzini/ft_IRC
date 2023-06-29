@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 15:23:17 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/25 19:01:43 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/27 19:26:28 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,10 @@
 #include "Channel.hpp"
 #include "../cmd/Parser.hpp"
 
+class Client;
 class Server;
 class Channel;
+class Parser;
 
 #define MAX_CONNECTIONS 999
 
@@ -62,7 +64,7 @@ class Server
         std::vector<Channel *>  _channels;
         std::map<int, Client *> _clients;
 
-        //Parser*                 _parser;
+        Parser*                 _parser;
 
         Server();
         Server(const Server& src);

@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 15:23:06 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/27 17:54:39 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/28 16:11:17 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,15 @@ Server::Server(const std::string &port, const std::string &pass)
 {
     _running = 1;
     _sock = create_socket();
-    //_parser = new Parser(this);
+    _parser = new Parser(this);
 }
 
 Server::~Server() 
 {
-    //delete _parser;
+    delete _parser;
 
-    // for (size_t i = 0; i < _channels.size(); i++)
-    //     delete _clients[i];
+    for (size_t i = 0; i < _channels.size(); i++)
+        delete _clients[i];
 }
 
 
@@ -150,10 +150,7 @@ void            Server::on_client_connect()
 
     // logging connect message
 
-    //char message[1000];
     std::cout << client->get_host().c_str() <<  client->get_port() << " has connected!" <<std::endl;
-    //sprintf(message, "%s:%d has connected.", client->get_host().c_str(), client->get_port());
-    //log(message);
 }
 
 void            Server::on_client_disconnect(int fd)
@@ -206,10 +203,10 @@ void            Server::on_client_message(int fd)
 {
     try
     {
-        //Client*     client = _clients.at(fd);
+        Client*     client = _clients.at(fd);
         std::string message = this->read_message(fd);
         std::cout << message << std::endl;
-        //_parser->invoke(client, message);
+        _parser->invoke(client, message);
     }
     catch (const std::exception& e) 
     {

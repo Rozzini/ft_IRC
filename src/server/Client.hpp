@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: alalmazr <alalmazr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 19:10:46 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/27 17:19:43 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/29 14:18:39 by alalmazr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ private:
 	std::string uname;
 	std::string name;
 	std::string host;
-	// add smth for the channel
+	Channel *channel;
 	// 0handshake 1login 2registed -1disconnected
 	int state;
 
@@ -48,7 +48,9 @@ public:
 	void set_nick(const std::string &nick);
 	void set_uname(const std::string &uname);
 	void set_name(const std::string &name);
+	void set_channel(Channel *channel);
 	// getters
+	std::string get_prefix() const;
 	int get_fd() const;
 	int get_port() const;
 	int get_state();
@@ -59,15 +61,14 @@ public:
 	std::string get_name() const;
 	std::string get_host() const;
 
-	// check state
 	// send recieve actions
 	void send(const std::string &msg) const;
 	void reply(const std::string &msg);
 	// welcome msg as in irc
 	void welcome();
 	// client actions; join/leave
-	// int	join_channel(channel num);
-	// int leave_channel(channel num);
+	void join(Channel *channel);
+	void leave();
 };
 
 #endif
