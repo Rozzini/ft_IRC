@@ -6,11 +6,12 @@
 /*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:41:28 by dkaratae          #+#    #+#             */
-/*   Updated: 2023/06/27 18:40:36 by dkaratae         ###   ########.fr       */
+/*   Updated: 2023/06/29 10:42:37 by dkaratae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
+#include <string>
 
 Channel::Channel (std::string channelName, std::string key, Client *client)
 {
@@ -19,36 +20,63 @@ Channel::Channel (std::string channelName, std::string key, Client *client)
     this->key = key;
     this->inviteOnly = false;
     this->userLimit = -1;
+    // this->sign = false;
+    // this->i = false;
+    this->t = false;
+    // this->k = false;
+    // this->o = false;
+    // this->l = false;
     operators[0] = client;
 }
 
 Channel::~Channel() {}
 
 
-void Channel::setMod(char m)
-{
-    std::string a(1, m);
-    if (this->check_mode(m))
-        this->modes.append(a);
-}
+// void Channel::setMod(char m)
+// {
+//     std::string a(1, m);
+//     if (this->check_mode(m))
+//         this->modes.append(a);
+// }
 
-bool Channel::check_mode(char c)
+// bool Channel::check_mode(char c)
+// {
+//     std::string ops = "itkol";
+//     unsigned long n;
+//     n = ops.find(c);
+//     if (n == std::string::npos)
+//     {
+//         std::cout << "dolboeb" << std::endl;
+//         return false;
+//     }
+//     n = this->modes.find(c);
+//     if (n == std::string::npos)
+//     {
+//         std::cout << "ne nashol" << std::endl;
+//         return false;
+//     }
+//     return true;
+// }
+
+void Channel::setMode(char modeFlag, char sign, Client *client)
 {
-    std::string ops = "itkol";
-    unsigned long n;
-    n = ops.find(c);
-    if (n == std::string::npos)
-    {
-        std::cout << "dolboeb" << std::endl;
-        return false;
-    }
-    n = this->modes.find(c);
-    if (n == std::string::npos)
-    {
-        std::cout << "ne nashol" << std::endl;
-        return false;
-    }
-    return true;
+    if (sign == '+' && modeFlag == 'i')
+        inviteOnly = false;
+    else if (sign == '-' && modeFlag == 'i')
+        inviteOnly = true;
+    else if (sign == '+' && modeFlag == 't')
+        t = true;
+    else if (sign == '-' && modeFlag == 't')
+        t = false;
+    else if (sign == '-' && modeFlag == 'k')
+        key = "";
+    else if (sign == '+' && modeFlag == 'o')
+        setOperator(client, true);
+    else if (sign == '-' && modeFlag == 'o')
+        setOperator(client, false);
+    else if (sign == '-' && modeFlag == 'l')
+        setUserLimit(-1);
+        
 }
 
 void Channel::setName(std::string name)
@@ -66,6 +94,11 @@ std::vector<Client *> Channel::getOperators()
     return (this->operators);
 }
 
+std::string Channel::getMode()
+{
+    return mode;
+}
+
 std::vector<Client *> Channel::getClients()
 {
     return (this->clients);
@@ -73,7 +106,8 @@ std::vector<Client *> Channel::getClients()
     
 void Channel::setTopic(std::string topic)
 {
-    this->topic = topic;
+    if (t)
+        this->topic = topic;
 }
 
 std::string Channel::getTopic()

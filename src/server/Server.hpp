@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 15:23:17 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/27 19:26:28 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/29 14:56:56 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@
 class Client;
 class Server;
 class Channel;
+class Client;
 class Parser;
 
 #define MAX_CONNECTIONS 999
