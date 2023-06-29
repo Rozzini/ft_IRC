@@ -6,7 +6,7 @@
 /*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:41:28 by dkaratae          #+#    #+#             */
-/*   Updated: 2023/06/28 19:38:09 by dkaratae         ###   ########.fr       */
+/*   Updated: 2023/06/29 10:42:37 by dkaratae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ Channel::Channel (std::string channelName, std::string key, Client *client)
     // this->sign = false;
     // this->i = false;
     this->t = false;
-    this->k = false;
-    this->o = false;
-    this->l = false;
+    // this->k = false;
+    // this->o = false;
+    // this->l = false;
     operators[0] = client;
 }
 
@@ -58,7 +58,7 @@ Channel::~Channel() {}
 //     return true;
 // }
 
-void Channel::setMode(char modeFlag, char sign, std::string name)
+void Channel::setMode(char modeFlag, char sign, Client *client)
 {
     if (sign == '+' && modeFlag == 'i')
         inviteOnly = false;
@@ -71,7 +71,12 @@ void Channel::setMode(char modeFlag, char sign, std::string name)
     else if (sign == '-' && modeFlag == 'k')
         key = "";
     else if (sign == '+' && modeFlag == 'o')
-        setOperator(Client *client, bool isOperator)
+        setOperator(client, true);
+    else if (sign == '-' && modeFlag == 'o')
+        setOperator(client, false);
+    else if (sign == '-' && modeFlag == 'l')
+        setUserLimit(-1);
+        
 }
 
 void Channel::setName(std::string name)

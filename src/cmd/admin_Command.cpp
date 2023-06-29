@@ -6,12 +6,14 @@
 /*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:07:38 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/28 19:51:52 by dkaratae         ###   ########.fr       */
+/*   Updated: 2023/06/29 10:45:31 by dkaratae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Command.hpp"
 #include "../server/Server.hpp"
+#include <cstdio>
+#include <string>
 
 // KICK <channel> <client> :[<message>]
 void KICK::execute(Client *client, std::vector<std::string> args)
@@ -94,7 +96,38 @@ void MODE::execute(Client *client, std::vector<std::string> args)
 	// {
 	// 	client->reply("need more args");
 	// 	return;
+	(void)client;
+	Channel *ch;
+	Client *cl;
+	bool sign = false;
+	int j = 0;
+	char sign_ch = '0';
 	
+	ch = serv->get_channel(args[1]);
+	cl = serv->get_client(args[3]);
+	
+	for (unsigned int i = 0; i < args[2].size(); i++)
+	{
+		if (args[2][j] == '+' || args[2][j] == '-')
+		{
+			sign = true;
+			sign_ch = args[2][j];
+		}
+		if (sign == true && args[2][j] == 'i')
+			ch->setMode(args[2][j], sign_ch, cl);
+		else if (sign == true && args[2][j] == 't')
+			ch->setMode(args[2][j], sign_ch, cl);
+		else if (sign == true && args[2][j] == 'k')
+			ch->setMode(args[2][j], sign_ch, cl);
+		else if (sign == true && args[2][j] == 'o')
+			ch->setMode(args[2][j], sign_ch, cl);
+		else if (sign == true && args[2][j] == 'l')
+		{
+			ch->setUserLimit(stoi(args[3]));
+			ch->setMode(args[2][j], sign_ch, cl);
+		}
+		
+	}
 }
 
 ///INVITE <NICK> <channel>
