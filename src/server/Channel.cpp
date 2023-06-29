@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:41:28 by dkaratae          #+#    #+#             */
-/*   Updated: 2023/06/29 10:42:37 by dkaratae         ###   ########.fr       */
+/*   Updated: 2023/06/29 16:18:33 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,32 +31,24 @@ Channel::Channel (std::string channelName, std::string key, Client *client)
 
 Channel::~Channel() {}
 
-
-// void Channel::setMod(char m)
-// {
-//     std::string a(1, m);
-//     if (this->check_mode(m))
-//         this->modes.append(a);
-// }
-
-// bool Channel::check_mode(char c)
-// {
-//     std::string ops = "itkol";
-//     unsigned long n;
-//     n = ops.find(c);
-//     if (n == std::string::npos)
-//     {
-//         std::cout << "dolboeb" << std::endl;
-//         return false;
-//     }
-//     n = this->modes.find(c);
-//     if (n == std::string::npos)
-//     {
-//         std::cout << "ne nashol" << std::endl;
-//         return false;
-//     }
-//     return true;
-// }
+bool Channel::check_mode(char c)
+{
+    std::string ops = "itkol";
+    unsigned long n;
+    n = ops.find(c);
+    if (n == std::string::npos)
+    {
+        std::cout << "dolboeb" << std::endl;
+        return false;
+    }
+    n = this->modes.find(c);
+    if (n == std::string::npos)
+    {
+        std::cout << "ne nashol" << std::endl;
+        return false;
+    }
+    return true;
+}
 
 void Channel::setMode(char modeFlag, char sign, Client *client)
 {

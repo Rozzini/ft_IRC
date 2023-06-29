@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:41:22 by dkaratae          #+#    #+#             */
-/*   Updated: 2023/06/29 10:42:28 by dkaratae         ###   ########.fr       */
+/*   Updated: 2023/06/29 16:18:16 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ class Channel
 
 
         // void setMod(char m);
-        // bool check_mode(char c);
+        bool check_mode(char c);
     
         void setTopic(std::string topic);
         void setKey(std::string key);
