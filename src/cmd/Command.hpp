@@ -116,6 +116,7 @@ class MODE : public Command
 public:
     MODE(Server* server);
     void execute(Client* client, std::vector<std::string> args);
+    // bool checkFlags(std::string strFlags, char c);
     ~MODE();
 };
 
