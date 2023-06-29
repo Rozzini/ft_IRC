@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 18:03:16 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/29 20:40:14 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 02:58:12 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,22 +141,13 @@ void PM::execute(Client *client, std::vector<std::string> args)
 
     if (target.at(0) == '#')//channel notice
     {
-        Channel* channel = client->get_channel();
-        if (!channel)
+		Channel *channel =  serv->get_channel(target.substr(1, target.size()));
+        if (client->isInChannel(channel->getName()))
         {
-            client->reply(ERR_NOSUCHCHANNEL(client->get_nick(), target));
+            client->reply(ERR_CHAN(client->get_nick(), target));
 			return;
         }
-        // channel is not for external messages
-        // if (!channel->ext_msg())
-        // {
-            if (!(channel->isClientInChannel(client)))
-            {
-                client->reply(ERR_CHAN(client->get_nick(), target));
-                return;
-            }
-        // }
-        // channel->broadcast(RPLY_PM(client->get_prefix(), target, message), client);
+        channel->broadcast(RPLY_PM(client->get_prefix(), target, message), client);
         return;
     }
     // else if notice is for a client
@@ -190,28 +181,25 @@ void JOIN::execute(Client *client, std::vector<std::string> args)
 	std::string name = args[0];
 	std::string pass = args.size() > 1 ? args[1] : "";
 
-	Channel *channel = client->get_channel();
-	if (channel)
+	if (client->isInChannel(name))
 	{
-		client->reply(ERR_TOOMANYCHANNELS(client->get_nick(), name));
+		client->reply(ERR_ALREADYJOINEDCHANNEL(client->get_nick(), name));
 		return;
 	}
 
-	channel = serv->get_channel(name);
+	Channel *channel = serv->get_channel(name);
 	if (!channel)
 		channel = serv->create_channel(name, pass, client);
 
 	// checks channel has a user limit and if current number of users is more than limit
 	if (channel->getUserLimit() > 0 && channel->getCountClients() >= channel->getUserLimit())
 	{
-		//client->reply(ERR_CHANNEL_FULL(client->get_nick(), name));
-		std::cout << "CHANNEL FULL" << std::endl;
+		client->reply(ERR_CHANNEL_FULL(client->get_nick(), name));
 		return;
 	}
 	if (channel->getKey() != pass)
 	{
-		//client->reply(ERR_CHANNELKEY(client->get_nick(), name));
-		std::cout << "WRONG CHANNEL KEY" << std::endl;
+		client->reply(ERR_CHANNELKEY(client->get_nick(), name));
 		return;
 	}
 

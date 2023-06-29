@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:41:28 by dkaratae          #+#    #+#             */
-/*   Updated: 2023/06/29 16:58:39 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 00:09:40 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,4 +201,36 @@ bool Channel::isClientInChannel(Client *client)
             return true;
     }
     return false;
+}
+
+void Channel::broadcast(const std::string& message)
+{
+    std::vector<Client *> clients = getClients();
+    client_iterator it_b = clients.begin();
+    client_iterator it_e = clients.end();
+
+    while (it_b != it_e)
+    {
+        (*it_b)->write(message);
+        it_b++;
+    }
+}
+
+void Channel::broadcast(const std::string& message, Client* exclude)
+{
+    std::vector<Client *> clients = getClients();
+    client_iterator it_b = clients.begin();
+    client_iterator it_e = clients.end();
+
+    while (it_b != it_e)
+    {
+        if (*it_b == exclude)
+        {
+            it_b++;
+            continue;
+        }
+
+        (*it_b)->write(message);
+        it_b++;
+    }
 }

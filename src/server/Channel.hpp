@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:41:22 by dkaratae          #+#    #+#             */
-/*   Updated: 2023/06/29 16:18:16 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 00:07:18 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ class Client;
 
 class Channel
 {
+    typedef std::vector<Client *>::iterator client_iterator;
+
     public:
         Channel(std::string channelName, std::string key, Client *client);
         ~Channel();
@@ -53,6 +55,9 @@ class Channel
 
         void setName(std::string name);
         std::string getName();
+        
+        void broadcast(const std::string& message);
+        void broadcast(const std::string& message, Client* exclude);
         
         std::vector<Client *> getOperators();
         std::vector<Client *> getClients();

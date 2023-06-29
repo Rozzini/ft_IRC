@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 15:23:06 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/29 19:07:30 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 02:30:08 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,16 +104,14 @@ Channel*        Server::get_channel(const std::string& name)
     channel_iterator it_b = _channels.begin();
     channel_iterator it_e = _channels.end();
 
-    std::cout << "CHANNEL THAT TRYING TO JOIN:  " << name << std::endl;
     while (it_b != it_e)
     {
-         std::cout << "CHANNEL NAME: " << (*it_b)->getName() << std::endl;
         if (!name.compare((*it_b)->getName()))
             return (*it_b);
 
         it_b++;
     }
-    std::cout << "RETURNIN NULL CHANNEL" << std::endl;
+    
     return NULL;
 }
 
@@ -162,14 +160,11 @@ void            Server::on_client_disconnect(int fd)
 
         Client* client = _clients.at(fd);
 
-        //client->leave();
+        client->leaveAllChannels();
 
         // log about disconnecting 
 
-        //char message[1000];
         std::cout << client->get_host().c_str() <<  client->get_port() << " has disconnected!" <<std::endl;
-		//sprintf(message, "%s:%d has disconnected!", client->get_host().c_str(), client->get_port());
-		//log(message);
 
         _clients.erase(fd);
 
@@ -206,7 +201,6 @@ void            Server::on_client_message(int fd)
     {
         Client*     client = _clients.at(fd);
         std::string message = this->read_message(fd);
-        std::cout << message << std::endl;
         _parser->invoke(client, message);
     }
     catch (const std::exception& e) 
@@ -242,7 +236,6 @@ Channel*        Server::create_channel(const std::string& name, const std::strin
 {
     Channel *channel = new Channel(name, key, client);
     _channels.push_back(channel);
-    std::cout << "Channel Created!!!" << std::endl;
     return channel;
 }
 

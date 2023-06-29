@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:44:41 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/29 20:41:11 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 02:21:30 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ Parser::Parser(Server* srv) : _srv(srv)
     _commands["KILL"] = new KILL(_srv);
     _commands["TOPIC"] = new TOPIC(_srv);
     _commands["MODE"] = new MODE(_srv);
-
 	_commands["INVITE"] = new INVITE(_srv);
 }
 

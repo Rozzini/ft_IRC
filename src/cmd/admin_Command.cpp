@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:07:38 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/29 20:17:54 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 03:00:33 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void KICK::execute(Client *client, std::vector<std::string> args)
 	std::string target = args[1];
 	std::string reason = (args.size() >= 3 && args[2][0] != ':') ? args[2] : "No reason specified!";
 
-	Channel *channel = client->get_channel();
+	Channel *channel = serv->get_channel(name);
 	if (!channel || channel->getName() != name)
 	{
 		client->reply(ERR_NOTONCHANNEL(client->get_nick(), channel->getName()));
