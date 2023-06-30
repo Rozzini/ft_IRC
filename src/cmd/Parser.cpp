@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:44:41 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/30 03:03:22 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 16:00:26 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ Parser::Parser(Server* srv) : _srv(srv)
     _commands["USER"] = new USER(_srv, false);
     _commands["QUIT"] = new QUIT(_srv, false);
 
-    _commands["PM"] = new PM(_srv);
+    _commands["PRIVMSG"] = new PM(_srv);
     _commands["JOIN"] = new JOIN(_srv);
     _commands["KICK"] = new KICK(_srv);
     _commands["KILL"] = new KILL(_srv);
