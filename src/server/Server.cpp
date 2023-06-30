@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alalmazr <alalmazr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 15:23:06 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/30 19:37:53 by alalmazr         ###   ########.fr       */
+/*   Updated: 2023/06/30 22:57:09 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,7 @@ void            Server::on_client_message(int fd)
     {
         Client*     client = _clients.at(fd);
         std::string message = this->read_message(fd);
-        std::cout << message << std::endl;
+    
         _parser->invoke(client, message);
     }
     catch (const std::exception& e) 
@@ -234,9 +234,8 @@ Channel*        Server::create_channel(const std::string& name, const std::strin
     Channel *channel = new Channel(name, key, client);
     _channels.push_back(channel);
     client->reply(RplChannelCreated(channel->getName()));
-    client->reply(RplTopic(channel->getName(), "AAA"));
-    client->reply(RplTopicSetBy(channel->getName(), "AAA"));
-    //client->reply(RplChannelCreated(channel->getName()));
+    client->reply(RplTopic(channel->getName(), channel->getName()));
+    client->reply(RplTopicSetBy(channel->getName(), channel->getName()));
     return channel;
 }
 

@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:07:38 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/30 22:39:17 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 22:54:15 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,31 +72,21 @@ void TOPIC::execute(Client *client, std::vector<std::string> args)
 
 	std::string channelName = args[0];
 	Channel *channel = serv->get_channel(channelName);
-	if (!channel)
+	if (channel == NULL)
 	{
 		client->reply(ERR_NOSUCHCHANNEL(client->get_nick(), channel->getName()));
 		return;
 	}
-	//if mode is -t, admin can change but others no? or no one can change or set!!!!!!!!!!!!!!!!
-	if (channel->check_mode('t') && channel->isOperator(client->get_nick()) == false)
+	if (channel->getBoolTopic() == true)
 	{
-		size_t i = 0;
-		std::vector<Client *> ops = channel->getOperators();
-		for (i = 0; i < ops.size(); i++)
-		{
-			if (ops[i]->get_nick() == client->get_nick())
-				break;
-		}
-		if (i < ops.size())
-		{
-			client->reply(ERR_OP_NEEDED(client->get_nick(), channel->getName()));
-			return;
-		}
+		client->reply(ERR_OP_NEEDED(client->get_nick(), channel->getName()));
+		return;
 	}
 	else
 	{
 		std::string topic = args[1];
 		channel->setTopic(topic);
+		client->reply(RplTopic(channel->getName(), topic));
 	}
 	if (args.size() == 1)
 	{
