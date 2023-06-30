@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: alalmazr <alalmazr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:41:28 by dkaratae          #+#    #+#             */
-/*   Updated: 2023/06/30 17:46:38 by dkaratae         ###   ########.fr       */
+/*   Updated: 2023/06/30 20:06:47 by alalmazr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,11 @@ bool Channel::check_mode(char c)
     n = ops.find(c);
     if (n == std::string::npos)
     {
-        std::cout << "dolboeb" << std::endl;
         return false;
     }
     n = this->modes.find(c);
     if (n == std::string::npos)
     {
-        std::cout << "ne nashol" << std::endl;
         return false;
     }
     return true;
@@ -78,12 +76,12 @@ void Channel::setModeK(char sign, std::string key)
     if (sign == '+')
     {
         this->key = key;
-        std::cout << "Set password for this Channel!" << std::endl;
+		this->operators.front()->reply(RPLY_CHAN_PW_SET(this->getName()));
     }
     else if (sign == '-')
     {
         key = "";
-        std::cout << "Delete password for this Channel!" << std::endl;
+        this->operators.front()->reply(RPLY_CHAN_PW_UNSET(this->getName()));
     }
 }
 
@@ -92,12 +90,12 @@ void Channel::setModeO(char sign, Client *client)
     if (sign == '+')
     {
         setOperator(client, true);
-        std::cout << client->get_nick() << " is Operator this Channel!" << std::endl;
+		client->reply(RPLY_USR_IS_OP(client->get_nick(), this->getName()));
     }
     else if (sign == '-')
     {
         setOperator(client, false);
-        std::cout << client->get_nick() << " isn't Operator this Channel!"<< std::endl;
+        client->reply(RPLY_USR_NOT_OP(client->get_nick(), this->getName()));
     }
 }
 
@@ -106,17 +104,17 @@ void Channel::setModeL(char sign, int limit)
     if (sign == '+')
     {
         if (limit < getCountClients())
-            std::cout << "Not possible set limit, because it less then clients in the Channel" << std::endl;
+           this->operators.front()->reply(RPLY_TOO_MUCH_LIMIT(this->getName()));
         else
         {
             setUserLimit(limit);
-            std::cout << "You set limit "<< limit << " users for this Channel" << std::endl;
+          this->operators.front()->reply(RPLY_LIMIT_SET(this->getName()));
         }
     }
     else if (sign == '-')
     {
         setUserLimit(-1);
-        std::cout << "You unset limit of users for this Channel" << std::endl;
+      this->operators.front()->reply(RPLY_LIMIT_UNSET(this->getName()));
     }
 }
 
@@ -239,7 +237,7 @@ int Channel::getUserLimit()
 void Channel::addClient(Client *client)
 {
     this->clients.push_back(client);
-    std::cout << client->get_nick() << " added to Channel!" << std::endl;
+   client->reply(RPLY_USER_ADDED(client->get_nick(), this->getName()));
 }
 
 void Channel::removeClient(Client *client)

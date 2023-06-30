@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: alalmazr <alalmazr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 15:23:06 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/30 19:03:28 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 19:37:53 by alalmazr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,6 @@ void            Server::on_client_disconnect(int fd)
         // finding the client and removing
         Client* client = _clients.at(fd);
         client->leaveAllChannels();
-        std::cout << "AAA2" << std::endl;
         // log about disconnecting 
 
         std::cout << client->get_host().c_str() <<  client->get_port() << " has disconnected!" <<std::endl;
