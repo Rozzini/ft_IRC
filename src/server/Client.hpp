@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 19:10:46 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/30 04:21:46 by dkaratae         ###   ########.fr       */
+/*   Updated: 2023/06/30 16:37:48 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ class Channel;
 #define ERR_CHANNEL_FULL(source, channel)              "471 " + source + " " + channel + " :Cannot join channel (+l)"
 #define ERR_CHAN(source, channel)           "404 " + source + " " + channel + " :Cannot send to channel"
 #define ERR_OP_NEEDED(source, channel)           "482 " + source + " " + channel + " :You're not channel operator"
-
+#define ERR_INV_ONLY_CH(channel)				"473 " + channel + ": Cannot join Channel (invite only)" 
 #define ERR_NO_EXIST(source, nickname)                "401 " + source + " " + nickname + " :No such nick/channel"
 #define ERR_USERNOTINCHANNEL(source, nickname, channel) "441 " + source + " " + nickname + " " + channel + " :Not on channel"
 
