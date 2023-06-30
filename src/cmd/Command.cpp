@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 18:03:16 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/30 16:19:05 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 16:39:23 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,13 +139,18 @@ void PM::execute(Client *client, std::vector<std::string> args)
 
     if (target.at(0) == '#')//channel notice
     {
+		std::cout << "AAA1" << std::endl;
 		Channel *channel =  serv->get_channel(target.substr(1, target.size()));
+		std::cout << "AAA2" << std::endl;
         if (!client->isInChannel(channel->getName()))
         {
+			std::cout << "ERR" << std::endl;
             client->reply(ERR_CHAN(client->get_nick(), target));
 			return;
         }
+		std::cout << "AAA3" << std::endl;
         channel->broadcast(RPLY_PM(client->get_prefix(), target, message), client);
+		std::cout << "AAA4" << std::endl;
         return;
     }
     // else if notice is for a client
@@ -199,6 +204,10 @@ void JOIN::execute(Client *client, std::vector<std::string> args)
 	{
 		client->reply(ERR_CHANNELKEY(client->get_nick(), name));
 		return;
+	}
+	if (channel->getMode() == "+i")
+	{
+		client->reply(ERR_INV_ONLY_CH(channel->getName()));
 	}
 
 	client->join(channel);
