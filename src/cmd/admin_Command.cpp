@@ -189,16 +189,12 @@ void MODE::execute(Client *client, std::vector<std::string> args)
 				if ((cl = serv->get_client(args[2])) == NULL)
 				{
 					client->reply(ERR_MOREPARAMS(client->get_nick(), "MODE"));
-<<<<<<< HEAD
-					return;
-=======
 						return;
 				}
 				if (ch->isClientInChannel(cl) == false)
 				{
 					client->reply(ERR_MOREPARAMS(client->get_nick(), "MODE"));
 						return;
->>>>>>> a3a5d45c88e57e4b0221d1cb6b4a56a5eb8cbc85
 				}
 				ch->setModeO(sign, cl);
 			}
