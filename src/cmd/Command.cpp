@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 18:09:47 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/30 18:09:48 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 19:01:14 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,14 +53,12 @@ void PASS::execute(Client *client, std::vector<std::string> args)
 	if (args.empty())
 	{
 		client->reply(ERR_MOREPARAMS(client->get_nick(), "PASS"));
-		std::cout << "MORE PARAMS PLS" << std::endl;
 		return;
 	}
 
 	if (client->get_state() == 2) //== registered )
 	{
 		client->reply(ERR_ALREADY_REG(client->get_nick()));
-		std::cout << "ALREADY REGISTERED" << std::endl;
 		return;
 	}
 
@@ -71,12 +69,10 @@ void PASS::execute(Client *client, std::vector<std::string> args)
 	if (serv->get_password() != password)
 	{
 		client->reply(ERR_PW(client->get_nick()));
-		std::cout << "WRONG SERV PASS" << std::endl;
 		return;
 	}
 
 	client->set_state(1); // 1 = registered
-	std::cout << "LOGED IN" << std::endl;
 }
 
 // NICK <nickname>
@@ -85,7 +81,6 @@ void NICK::execute(Client *client, std::vector<std::string> args)
 	if (args.empty() || args[0].empty())
 	{
 		client->reply(ERR_NO_NICK(client->get_nick()));
-		std::cout << "MORE PARAMS PLS" << std::endl;
 		return;
 	}
 
@@ -105,13 +100,11 @@ void USER::execute(Client *client, std::vector<std::string> args)
 	if (client->get_state() == 2)
 	{
 		client->reply(ERR_ALREADY_REG(client->get_nick()));
-		std::cout << "REGISTERED" << std::endl;
 		return;
 	}
 	if (args.size() < 4)
 	{
 		client->reply(ERR_MOREPARAMS(client->get_nick(), "USER"));
-		std::cout << "MORE PARAMS PLS" << std::endl;
 		return;
 	}
 	client->set_uname(args[0]);
@@ -142,17 +135,13 @@ void PM::execute(Client *client, std::vector<std::string> args)
 
     if (target.at(0) == '#')//channel notice
     {
-		Channel *channel =  serv->get_channel(target.substr(1, target.size()));
-		std::cout << "AAAa2" << "ch   " << channel << "  client: " << client << std::endl;
+		Channel *channel =  serv->get_channel(target);
         if (!client->isInChannel(channel->getName()))
         {
-			std::cout << "aERR" << std::endl;
             client->reply(ERR_CHAN(client->get_nick(), target));
 			return;
         }
-		std::cout << "AAAa3" << std::endl;
         channel->broadcast(RPLY_PM(client->get_prefix(), target, message), client);
-		std::cout << "AAAa4" << std::endl;
         return;
     }
     // else if notice is for a client
@@ -187,7 +176,10 @@ void JOIN::execute(Client *client, std::vector<std::string> args) //ERROR segfau
 	std::string pass = args.size() > 1 ? args[1] : "";
 
 	if(name[0] != '#')
-		name.insert(0, "#");
+	{
+		std::cout << "Channel Should start with #" << std::endl;
+		return;
+	}
 	if (client->isInChannel(name))
 	{
 		client->reply(ERR_ALREADYJOINEDCHANNEL(client->get_nick(), name));

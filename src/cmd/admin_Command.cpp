@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:07:38 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/30 18:08:57 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 19:02:26 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,6 @@ void TOPIC::execute(Client *client, std::vector<std::string> args)
 	if (args.size() == 1)
 	{
 		std::string topic = "The topic of " + channelName + " is " + channel->getTopic();
-		std::cout << "TOPIC SETTED: " << topic << std::endl;
 		client->reply(topic);
 	}
 }
@@ -229,10 +228,8 @@ void INVITE::execute(Client *client, std::vector<std::string> args)
 	if (args.empty())
 	{
 		client->reply("need more args");
-		std::cout << "NEED MORE ARGS" << std::endl;
 		return;
 	}
-	std::cout << "CLIENT = "<< args[0] << std::endl;
 	if ((cl = serv->get_client(args[0])) != NULL)
 	{
 		if (args[1][0] == '#')

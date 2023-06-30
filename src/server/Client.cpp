@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 19:10:46 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/30 17:29:47 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 19:03:07 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,13 +204,10 @@ void Client::leaveChannel(std::string chName)
 
 bool Client::isInChannel(std::string chName)
 {
-	std::cout << "III1" << std::endl;
 	std::vector<Channel *> channels = get_channels();
-	std::cout << "III2" << std::endl;
 	channel_iterator it = channels.begin();
 	channel_iterator end = channels.end();
 
-	std::cout << "III2" << std::endl;
 	while (it != end)
 	{
 		if (!chName.compare((*it)->getName()))
