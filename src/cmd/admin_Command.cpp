@@ -6,11 +6,7 @@
 /*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:07:38 by alalmazr          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2023/06/30 22:21:52 by dkaratae         ###   ########.fr       */
-=======
-/*   Updated: 2023/06/30 22:02:35 by mraspors         ###   ########.fr       */
->>>>>>> a3a5d45c88e57e4b0221d1cb6b4a56a5eb8cbc85
+/*   Updated: 2023/06/30 22:36:10 by dkaratae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,16 +185,12 @@ void MODE::execute(Client *client, std::vector<std::string> args)
 				if ((cl = serv->get_client(args[2])) == NULL)
 				{
 					client->reply(ERR_MOREPARAMS(client->get_nick(), "MODE"));
-<<<<<<< HEAD
-					return;
-=======
 						return;
 				}
 				if (ch->isClientInChannel(cl) == false)
 				{
 					client->reply(ERR_MOREPARAMS(client->get_nick(), "MODE"));
 						return;
->>>>>>> a3a5d45c88e57e4b0221d1cb6b4a56a5eb8cbc85
 				}
 				ch->setModeO(sign, cl);
 			}
