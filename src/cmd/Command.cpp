@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 18:03:16 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/30 02:58:12 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 15:32:49 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void PASS::execute(Client *client, std::vector<std::string> args)
 		return;
 	}
 
-	client->set_state(2); // 1 = registered
+	client->set_state(1); // 1 = registered
 	std::cout << "LOGED IN" << std::endl;
 }
 
@@ -90,12 +90,10 @@ void NICK::execute(Client *client, std::vector<std::string> args)
 	if (serv->get_client(nickname))
 	{
 		client->reply(ERR_NICK_USED(client->get_nick()));
-		std::cout << "NAME TAKEN" << std::endl;
 		return;
 	}
 	client->set_nick(nickname);
 	client->welcome();
-	std::cout << "WHALE CUM" << std::endl;
 }
 
 //  USER <username> <hostname> <servername> <realname>
