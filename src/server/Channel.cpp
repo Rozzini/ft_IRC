@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:41:28 by dkaratae          #+#    #+#             */
-/*   Updated: 2023/06/30 20:17:50 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 21:13:09 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,6 +247,7 @@ void Channel::removeClient(Client *client)
         if (this->clients[i]->get_nick() == client->get_nick())
         {
             this->clients.erase(this->clients.begin() + i);
+            this->broadcast(RPLY_KICK(client->get_prefix(), "ch", client->get_nick(), "no reason"));
             break;
         }
     }

@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:07:38 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/30 20:17:40 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 21:19:25 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ void KICK::execute(Client *client, std::vector<std::string> args)
 		client->reply(ERR_NO_EXIST(client->get_nick(), dest_client->get_nick()));
 		return;
 	}
-	// channel->kick(client, dest_client, reason);
-	channel->removeClient(client);
+	channel->removeClient(dest_client);
+	dest_client->leaveChannel(channel);
 }
 
 // TOPIC <channel> [<topicname>]
