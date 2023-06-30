@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 18:09:47 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/30 20:17:43 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 20:50:55 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,7 +201,7 @@ void JOIN::execute(Client *client, std::vector<std::string> args) //ERROR segfau
 		client->reply(ERR_CHANNELKEY(client->get_nick(), name));
 		return;
 	}
-	if (channel->getMode() == "+i")
+	if (channel->getInviteOnly() == true)
 	{
 		if (channel->isInvited(client) == false)
 		{
