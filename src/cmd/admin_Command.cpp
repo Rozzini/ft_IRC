@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:07:38 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/30 03:03:14 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 17:30:10 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ void TOPIC::execute(Client *client, std::vector<std::string> args)
 		std::cout << "NO SUCH CHANNEL" << std::endl;
 		return;
 	}
+	//if mode is -t, admin can change but others no? or no one can change or set!!!!!!!!!!!!!!!!
 	if (channel->check_mode('t') && channel->isOperator(client->get_nick()) == false)
 	{
 		size_t i = 0;
@@ -134,6 +135,7 @@ void MODE::execute(Client *client, std::vector<std::string> args)
 	//Check the Channel 
 	if ((ch = serv->get_channel(args[0])) == NULL)
 	{
+		client->reply(ERR_NOSUCHCHANNEL(client->get_nick(), ch->getName()));
 		std::cout << "There isn't such channel!!!" << std::endl;
 		return;
 	}

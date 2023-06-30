@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 15:23:06 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/30 04:24:18 by dkaratae         ###   ########.fr       */
+/*   Updated: 2023/06/30 18:01:25 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,17 +101,18 @@ Client*         Server::get_client(const std::string& nickname)
 
 Channel*        Server::get_channel(const std::string& name)
 {
+    std::cout << "Chnnales count" << _channels.size() << std::endl;
     channel_iterator it_b = _channels.begin();
     channel_iterator it_e = _channels.end();
 
     while (it_b != it_e)
     {
-        if (!name.compare((*it_b)->getName()))
+        if (name.compare((*it_b)->getName()))
             return (*it_b);
 
         it_b++;
     }
-    
+    std::cout << "Returns null" << std::endl;
     return NULL;
 }
 

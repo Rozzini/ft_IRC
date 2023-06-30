@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 18:03:16 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/30 16:39:23 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 17:58:25 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,18 +139,17 @@ void PM::execute(Client *client, std::vector<std::string> args)
 
     if (target.at(0) == '#')//channel notice
     {
-		std::cout << "AAA1" << std::endl;
 		Channel *channel =  serv->get_channel(target.substr(1, target.size()));
-		std::cout << "AAA2" << std::endl;
+		std::cout << "AAAa2" << "ch   " << channel << "  client: " << client << std::endl;
         if (!client->isInChannel(channel->getName()))
         {
-			std::cout << "ERR" << std::endl;
+			std::cout << "aERR" << std::endl;
             client->reply(ERR_CHAN(client->get_nick(), target));
 			return;
         }
-		std::cout << "AAA3" << std::endl;
+		std::cout << "AAAa3" << std::endl;
         channel->broadcast(RPLY_PM(client->get_prefix(), target, message), client);
-		std::cout << "AAA4" << std::endl;
+		std::cout << "AAAa4" << std::endl;
         return;
     }
     // else if notice is for a client
@@ -174,7 +173,7 @@ void QUIT::execute(Client *client, std::vector<std::string> args)
 }
 
 // JOIN <channels> [<keys>]
-void JOIN::execute(Client *client, std::vector<std::string> args)
+void JOIN::execute(Client *client, std::vector<std::string> args) //ERROR segfault <JOIN 42>
 {
 	if (args.empty())
 	{
@@ -184,6 +183,8 @@ void JOIN::execute(Client *client, std::vector<std::string> args)
 	std::string name = args[0];
 	std::string pass = args.size() > 1 ? args[1] : "";
 
+	if(name[0] != '#')
+		name.insert(0, "#");
 	if (client->isInChannel(name))
 	{
 		client->reply(ERR_ALREADYJOINEDCHANNEL(client->get_nick(), name));
