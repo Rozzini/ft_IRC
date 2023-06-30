@@ -6,7 +6,7 @@
 /*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:07:38 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/30 22:36:10 by dkaratae         ###   ########.fr       */
+/*   Updated: 2023/06/30 22:40:40 by dkaratae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,11 @@ void KICK::execute(Client *client, std::vector<std::string> args)
 		}
 	}
 	Client *dest_client = serv->get_client(target);
+	if (dest_client->get_nick().compare(client->get_nick()) == 0)
+	{
+		client->reply(ERR_NO_EXIST(client->get_nick(), dest_client->get_nick()));
+		return;
+	}
 	if (!dest_client)
 	{
 		client->reply(ERR_NO_EXIST(client->get_nick(), dest_client->get_nick()));
