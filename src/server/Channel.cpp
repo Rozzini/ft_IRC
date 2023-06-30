@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:41:28 by dkaratae          #+#    #+#             */
-/*   Updated: 2023/06/30 20:17:50 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 22:22:42 by dkaratae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void Channel::setModeK(char sign, std::string key)
     }
     else if (sign == '-')
     {
-        key = "";
+        this->key = "";
         this->operators.front()->reply(RPLY_CHAN_PW_UNSET(this->getName()));
     }
 }
@@ -113,8 +113,8 @@ void Channel::setModeL(char sign, int limit)
     }
     else if (sign == '-')
     {
-        setUserLimit(-1);
-      this->operators.front()->reply(RPLY_LIMIT_UNSET(this->getName()));
+        setUserLimit(limit);
+        this->operators.front()->reply(RPLY_LIMIT_UNSET(this->getName()));
     }
 }
 

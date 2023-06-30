@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   admin_Command.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:07:38 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/30 20:17:40 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 22:21:52 by dkaratae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,8 @@ void MODE::execute(Client *client, std::vector<std::string> args)
 		}
 		else if (args[1][1] == 'k')
 		{
-			if (args.size() == 3)	
+			std::cout << "KKK" << std::endl;
+			if ((sign == '+' && args.size() == 3) || (sign == '-' && args.size() == 2))	
 			{
 				ch->setModeK(sign, args[2]);
 			}
@@ -179,11 +180,11 @@ void MODE::execute(Client *client, std::vector<std::string> args)
 		}
 		else if (args[1][1] == 'o')
 		{
-			if (args.size() == 3)
+			if ((sign == '+' && args.size() == 3) || (sign == '-' && args.size() == 2))
 			{
 				if ((cl = serv->get_client(args[2])) == NULL)
 				{
-				client->reply(ERR_MOREPARAMS(client->get_nick(), "MODE"));
+					client->reply(ERR_MOREPARAMS(client->get_nick(), "MODE"));
 					return;
 				}
 				ch->setModeO(sign, cl);
@@ -193,8 +194,10 @@ void MODE::execute(Client *client, std::vector<std::string> args)
 		}
 		else if (args[1][1] == 'l')
 		{
-			if (args.size() == 3)	
+			if (sign == '+' && args.size() == 3)
 				ch->setModeL(sign, stoi(args[2]));
+			else if (sign == '-' && args.size() == 2)
+				ch->setModeL(sign, -1);
 			else
 				client->reply(ERR_MOREPARAMS(client->get_nick(), "MODE"));
 		}

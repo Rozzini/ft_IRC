@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 18:09:47 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/30 20:17:43 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 21:56:40 by dkaratae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,10 +196,14 @@ void JOIN::execute(Client *client, std::vector<std::string> args) //ERROR segfau
 		client->reply(ERR_CHANNEL_FULL(client->get_nick(), name));
 		return;
 	}
-	if (channel->getKey() != pass)
+	// || channel->getKey().compare("")
+	if (channel->getKey().empty() == false || channel->getKey().compare(""))
 	{
-		client->reply(ERR_CHANNELKEY(client->get_nick(), name));
-		return;
+		if (channel->getKey() != pass)
+		{
+			client->reply(ERR_CHANNELKEY(client->get_nick(), name));
+			return;
+		}
 	}
 	if (channel->getMode() == "+i")
 	{
