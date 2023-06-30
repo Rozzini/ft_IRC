@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parser.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: alalmazr <alalmazr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:44:41 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/30 16:00:26 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 19:35:24 by alalmazr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void            Parser::invoke(Client* client, const std::string& message)
 
             if (client->get_state() != 2 && cmd->need_auth())
             {
-                std::cout << "451 " << client->get_nick() << " :You have not registered" <<std::endl;
+				client->reply(ERR_NO_REG(client->get_nick()));
                 return;
             }
 
@@ -90,8 +90,8 @@ void            Parser::invoke(Client* client, const std::string& message)
         }
         catch (const std::exception& e)
         {
-            std::cout << "421 " << client->get_nick() << 
-            " " << name << " :Unknown command" << std::endl;
+			
+			client->reply(ERR_UNKNOWN_COMMAND(client->get_nick(), name));
         }
     }
 } 

@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:07:38 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/30 20:13:13 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 20:17:40 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ void KICK::execute(Client *client, std::vector<std::string> args)
 	if (args.size() < 2)
 	{
 		client->reply(ERR_MOREPARAMS(client->get_nick(), "KICK"));
-		std::cout << "NEED MORE ARGS" << std::endl;
 		return;
 	}
 
@@ -34,7 +33,6 @@ void KICK::execute(Client *client, std::vector<std::string> args)
 	if (!channel || channel->getName() != name)
 	{
 		client->reply(ERR_NOTONCHANNEL(client->get_nick(), channel->getName()));
-		std::cout << "NOT IN CHANNEL/CHANNEL DOESNT EXIST" << std::endl;
 		return;
 	}
 	std::vector<Client *> operators = channel->getOperators();
@@ -45,7 +43,6 @@ void KICK::execute(Client *client, std::vector<std::string> args)
 		if (i == operators.size() - 1)
 		{
 			client->reply(ERR_OP_NEEDED(client->get_nick(), channel->getName()));
-			std::cout << "DOESNT HAVE RIGHTS TO KICK" << std::endl;
 			return;
 		}
 	}
@@ -53,12 +50,10 @@ void KICK::execute(Client *client, std::vector<std::string> args)
 	if (!dest_client)
 	{
 		client->reply(ERR_NO_EXIST(client->get_nick(), dest_client->get_nick()));
-		std::cout << "NO SUCH USER" << std::endl;
 		return;
 	}
 	// channel->kick(client, dest_client, reason);
 	channel->removeClient(client);
-	std::cout << "CLIET REMOVED FROM CHANNEL" << std::endl;
 }
 
 // TOPIC <channel> [<topicname>]
@@ -67,7 +62,6 @@ void TOPIC::execute(Client *client, std::vector<std::string> args)
 	if (args.size() < 1 || args.size() > 2)
 	{
 		client->reply(ERR_MOREPARAMS(client->get_nick(), "TOPIC"));
-		std::cout << "NEED MORE PARAMS" << std::endl;
 		return;
 	}
 
@@ -75,8 +69,7 @@ void TOPIC::execute(Client *client, std::vector<std::string> args)
 	Channel *channel = serv->get_channel(channelName);
 	if (!channel)
 	{
-		//client->reply(ERR_NOSUCHCHANNEL(client->get_nick(), channel));
-		std::cout << "NO SUCH CHANNEL" << std::endl;
+		client->reply(ERR_NOSUCHCHANNEL(client->get_nick(), channel->getName()));
 		return;
 	}
 	//if mode is -t, admin can change but others no? or no one can change or set!!!!!!!!!!!!!!!!
@@ -91,8 +84,7 @@ void TOPIC::execute(Client *client, std::vector<std::string> args)
 		}
 		if (i < ops.size())
 		{
-			//client->reply(ERR_OP_NEEDED(client->get_nick(), channel));
-			std::cout << "NEED TO BE OPERATOR" << std::endl;
+			client->reply(ERR_OP_NEEDED(client->get_nick(), channel->getName()));
 			return;
 		}
 	}
@@ -120,22 +112,20 @@ void MODE::execute(Client *client, std::vector<std::string> args)
 	//Check count of arguments
 	if (args.size() < 1 || args.size() > 3)
 	{
-		// client->reply("need more args");
-		std::cout << "YOU NEED MORE OR LESS ARG!!!" << std::endl;
+		client->reply(ERR_MOREPARAMS(client->get_nick(), "MODE"));
 		return;
 	}
 	
 	//Check the Channel name should start with #
 	if (args[0][0] != '#')
 	{
-		std::cout << "Your channel should start with #" << std::endl;
+		client->reply(RPLY_USE_HASH(args[0]));
 		return;
 	}
 	//Check the Channel 
 	if ((ch = serv->get_channel(args[0])) == NULL)
 	{
 		client->reply(ERR_NOSUCHCHANNEL(client->get_nick(), ch->getName()));
-		std::cout << "There isn't such channel!!!" << std::endl;
 		return;
 	}
 	
@@ -143,7 +133,7 @@ void MODE::execute(Client *client, std::vector<std::string> args)
 	std::string str = args[0].substr(1, args[0].size());
 	if (!(ch->isOperator(client->get_nick())))
 	{
-		std::cout << "The Client isn't operator in this Channel!!!" << std::endl;
+		client->reply(ERR_OP_NEEDED(client->get_nick(), ch->getName()));
 		return;
 	}
 	
@@ -151,22 +141,19 @@ void MODE::execute(Client *client, std::vector<std::string> args)
 	{
 		if ((args[1][0] != '+') && (args[1][0] != '-'))
 		{
-			std::cout << "The Flag should be start the + or - " << std::endl;
+			client->reply(ERR_MOREPARAMS(client->get_nick(), "MODE"));
 			return;
 		}
 		sign = args[1][0];
-		std::cout << "HERE!!!1" << std::endl;
 		if (args[1][1] == 'i')
 		{
-			std::cout << "HERE!!!2" << std::endl;
 			if (args.size() == 2)	
 				ch->setModeI(sign);
 			else
 			{
-				std::cout << "You should use MODE #flag +/-i!!!" << std::endl;
+				client->reply(ERR_MOREPARAMS(client->get_nick(), "MODE"));
 				return;
 			}
-			std::cout << "HERE!!!3" << std::endl;
 		}
 		else if (args[1][1] == 't')
 		{
@@ -174,17 +161,19 @@ void MODE::execute(Client *client, std::vector<std::string> args)
 				ch->setModeT(sign);
 			else
 			{
-				std::cout << "You should use MODE #flag +/-t!!!" << std::endl;
+				client->reply(ERR_MOREPARAMS(client->get_nick(), "MODE"));
 				return;	
 			}
 		}
 		else if (args[1][1] == 'k')
 		{
 			if (args.size() == 3)	
+			{
 				ch->setModeK(sign, args[2]);
+			}
 			else
 			{
-				std::cout << "You should use MODE #flag +/-k keyPass!!!" << std::endl;
+				client->reply(ERR_MOREPARAMS(client->get_nick(), "MODE"));
 				return;
 			}
 		}
@@ -194,27 +183,27 @@ void MODE::execute(Client *client, std::vector<std::string> args)
 			{
 				if ((cl = serv->get_client(args[2])) == NULL)
 				{
-					std::cout << "There isn't such client!!!" << std::endl;
+				client->reply(ERR_MOREPARAMS(client->get_nick(), "MODE"));
 					return;
 				}
 				ch->setModeO(sign, cl);
 			}
 			else
-				std::cout << "You should use MODE #flag +/-0 clientName!!!" << std::endl;
+				client->reply(ERR_MOREPARAMS(client->get_nick(), "MODE"));
 		}
 		else if (args[1][1] == 'l')
 		{
 			if (args.size() == 3)	
 				ch->setModeL(sign, stoi(args[2]));
 			else
-				std::cout << "You should use MODE #flag +/-l limitUser!!!" << std::endl;
+				client->reply(ERR_MOREPARAMS(client->get_nick(), "MODE"));
 		}
 		else
-			std::cout << "You should use these commands +/-i, +/-t, +/-k, +/-o, +/-l," << std::endl;
+			client->reply(ERR_MODE(args[1]));
 	}
 	else
 	{
-		std::cout << "You should use these commands +/-i, +/-t, +/-k, +/-o, +/-l," << std::endl;
+		client->reply(ERR_MODE(args[1]));
 		return;	
 	}
 }
@@ -222,12 +211,12 @@ void MODE::execute(Client *client, std::vector<std::string> args)
 ///INVITE <NICK> <channel>
 void INVITE::execute(Client *client, std::vector<std::string> args)
 {
-	Channel *ch;
+	Channel *ch = NULL;
 	Client *cl;
 
 	if (args.empty())
 	{
-		client->reply("need more args");
+		client->reply(ERR_MOREPARAMS(client->get_nick(), "INVITE"));
 		return;
 	}
 	if ((cl = serv->get_client(args[0])) != NULL)
@@ -246,23 +235,23 @@ void INVITE::execute(Client *client, std::vector<std::string> args)
 				}
 				else
 				{
-					std::cout << "This client already exist in this channel!" << std::endl;
+					client->reply(ERR_ALREADY_IN_CH(cl->get_nick()));
 					return;
 				}
 			}
 			else
 			{
-				std::cout << "There isn't exist such channel" << std::endl;
+				client->reply(ERR_NOSUCHCHANNEL(cl->get_nick(), ch->getName()));
 				return;
 			}
 		} else {
-			std::cout << "You should write Channel name with # " << std::endl;
+			client->reply(RPLY_USE_HASH(ch->getName()));
 			return;
 		}
 	}
 	else
 	{
-		std::cout << "There isn't exist such client" << std::endl;
+		client->reply(ERR_NO_EXIST(cl->get_nick(), ch->getName()));
 		return;
 	}
 }

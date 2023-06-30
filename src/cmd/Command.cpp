@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 18:09:47 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/30 20:15:26 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 20:17:43 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,7 @@ void JOIN::execute(Client *client, std::vector<std::string> args) //ERROR segfau
 
 	if(name[0] != '#')
 	{
-		std::cout << "Channel Should start with #" << std::endl;
+		client->reply(RPLY_USE_HASH(name));
 		return;
 	}
 	if (client->isInChannel(name))
