@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:07:38 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/30 19:02:26 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 20:13:13 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,7 +237,13 @@ void INVITE::execute(Client *client, std::vector<std::string> args)
 			if ((ch = serv->get_channel(args[1])) != NULL)
 			{
 				if (!(ch->isClientInChannel(cl)))
-					ch->addClient(cl);
+				{
+					if (ch->isInvited(cl) == false)
+					{
+						ch->setInviteList(cl);
+						cl->reply(RPL_INVITING(ch->getName(), cl->get_name()));
+					}
+				}
 				else
 				{
 					std::cout << "This client already exist in this channel!" << std::endl;

@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 19:10:46 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/30 19:03:07 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 20:01:41 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,7 @@ void Client::leaveChannel(std::string chName)
 	channel->removeClient(this);
 	if (channel)
 	{
-		if (channels.size() > 1)
+		if (this->channels.size() > 1)
 			this->channels.erase(this->channels.begin() + i);
 		else
 			this->channels.clear();

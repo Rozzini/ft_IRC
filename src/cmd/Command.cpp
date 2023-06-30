@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 18:09:47 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/30 19:01:14 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 20:15:26 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,7 +203,13 @@ void JOIN::execute(Client *client, std::vector<std::string> args) //ERROR segfau
 	}
 	if (channel->getMode() == "+i")
 	{
-		client->reply(ERR_INV_ONLY_CH(channel->getName()));
+		if (channel->isInvited(client) == false)
+		{
+			client->reply(ERR_INV_ONLY_CH(channel->getName()));
+			return;
+		}
+		else
+			channel->popInivte(client);
 	}
 
 	client->join(channel);

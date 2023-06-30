@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:41:28 by dkaratae          #+#    #+#             */
-/*   Updated: 2023/06/30 17:46:38 by dkaratae         ###   ########.fr       */
+/*   Updated: 2023/06/30 20:15:03 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -294,4 +294,43 @@ void Channel::broadcast(const std::string& message, Client* exclude)
         (*it_b)->write(message);
         it_b++;
     }
+}
+
+void Channel::popInivte(Client *client)
+{
+    client_iterator it_b = this->inviteList.begin();
+    client_iterator it_e = this->inviteList.end();
+    Client *tmp = NULL;
+    int i = 0;
+    while (it_b != it_e)
+    {
+        if (client->get_nick().compare((*it_b)->get_nick()) == 0)
+        {
+            tmp = *it_b;
+            break;
+        };
+        it_b++;
+        i++;
+    }
+    if (tmp)
+	{
+		if (this->inviteList.size() > 1)
+			this->inviteList.erase(this->inviteList.begin() + i);
+		else
+			this->inviteList.clear();
+	}
+}
+
+bool Channel::isInvited(Client *client)
+{
+    client_iterator it_b = this->inviteList.begin();
+    client_iterator it_e = this->inviteList.end();
+
+    while (it_b != it_e)
+    {
+        if (client->get_nick().compare((*it_b)->get_nick()) == 0)
+            return true;
+        it_b++;
+    }
+    return false;
 }

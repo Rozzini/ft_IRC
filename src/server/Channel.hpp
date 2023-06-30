@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:41:22 by dkaratae          #+#    #+#             */
-/*   Updated: 2023/06/30 17:46:47 by dkaratae         ###   ########.fr       */
+/*   Updated: 2023/06/30 19:56:30 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,9 @@ class Channel
         
         std::vector<Client *> getOperators();
         std::vector<Client *> getClients();
+
+        void popInivte(Client *client);
+        bool isInvited(Client *client);
     private:
         std::string name;
         std::string topic;

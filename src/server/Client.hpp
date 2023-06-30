@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 19:10:46 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/30 16:37:48 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 20:05:52 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ class Channel;
 #define NAMREPLY(source, channel, users)            "353 " + source + " = " + channel + " :" + users
 #define ENDOFNAMES(source, channel)                 "366 " + source + " " + channel + " :End of /NAMES list."
 
+#define RPL_INVITING(channel, nick)    "341 " + channel + " " + nick
 /* Log Response */
 
 static inline void log(const std::string& message) 
