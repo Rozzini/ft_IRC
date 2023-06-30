@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 15:23:06 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/30 02:30:08 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 04:24:18 by dkaratae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,11 +157,9 @@ void            Server::on_client_disconnect(int fd)
     try
     {
         // finding the client and removing
-
         Client* client = _clients.at(fd);
-
         client->leaveAllChannels();
-
+        std::cout << "AAA2" << std::endl;
         // log about disconnecting 
 
         std::cout << client->get_host().c_str() <<  client->get_port() << " has disconnected!" <<std::endl;
@@ -201,6 +199,7 @@ void            Server::on_client_message(int fd)
     {
         Client*     client = _clients.at(fd);
         std::string message = this->read_message(fd);
+        std::cout << message << std::endl;
         _parser->invoke(client, message);
     }
     catch (const std::exception& e) 
@@ -236,6 +235,10 @@ Channel*        Server::create_channel(const std::string& name, const std::strin
 {
     Channel *channel = new Channel(name, key, client);
     _channels.push_back(channel);
+    client->reply(RplChannelCreated(channel->getName()));
+    client->reply(RplTopic(channel->getName(), "AAA"));
+    client->reply(RplTopicSetBy(channel->getName(), "AAA"));
+    //client->reply(RplChannelCreated(channel->getName()));
     return channel;
 }
 

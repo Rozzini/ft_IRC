@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:41:28 by dkaratae          #+#    #+#             */
-/*   Updated: 2023/06/30 03:03:34 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 03:18:16 by dkaratae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ void Channel::setModeL(char sign, int limit)
 {
     if (sign == '+')
     {
-        if (limit > getCountClients())
+        if (limit < getCountClients())
             std::cout << "Not possible because the limit less then clients in the Channel" << std::endl;
         else
         {
