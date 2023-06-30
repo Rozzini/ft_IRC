@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 19:10:46 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/30 02:46:56 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 04:21:46 by dkaratae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ class Channel;
 #define ERR_USERNOTINCHANNEL(source, nickname, channel) "441 " + source + " " + nickname + " " + channel + " :Not on channel"
 
 #define WELCOME(source)                             "001 " + source + " :Welcome " + source + " to the ft_irc network"
-#define NAMREPLY(source, channel, users)            "353 " + source + " = " + channel + " :" + users
-#define ENDOFNAMES(source, channel)                 "366 " + source + " " + channel + " :End of /NAMES list."
+//#define NAMREPLY(source, channel, users)            "353 " + source + " = " + channel + " :" + users
+//#define ENDOFNAMES(source, channel)                 "366 " + source + " " + channel + " :End of /NAMES list."
 
 #define RPLY_PM(source, target, message)            ":" + source + " PRIVMSG " + target + " :" + message
 #define RPLY_PART(source, channel)                       ":" + source + " PART :" + channel
@@ -62,6 +62,15 @@ class Channel;
 #define RPLY_MODE(source, channel, modes, args)          ":" + source + " MODE " + channel + " " + modes + " " + args
 #define RPLY_KICK(source, channel, target, reason)       ":" + source + " KICK " + channel + " " + target + " :" + reason
 
+//#define RplUniqOpIs         = 325,
+//#define RplChannelModeIs    = 324,                  // <channel> <mode>
+//#define RplChannelUrl       = 328,                  // <channel> :url                                                                   DALNET
+#define RplChannelCreated(channel)    "329 " + channel + " was created"
+//#define RplNoTopic          = 331,                  // <channel> :No topic is set.
+#define RplTopic(channel, users)         "329 " + channel + " topic is pizza"
+#define RplTopicSetBy(channel, users)       "329 " + channel + " topic was set by zaza" 
+#define NAMREPLY(source, channel, users)            "353 " + source + " = " + channel + " :" + users
+#define ENDOFNAMES(source, channel)                 "366 " + source + " " + channel + " :End of /NAMES list."
 
 /* Log Response */
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 19:10:46 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/30 02:47:13 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 04:04:21 by dkaratae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,19 +179,27 @@ void Client::leaveChannel(std::string chName)
 	channel_iterator it = channels.begin();
 	channel_iterator end = channels.end();
 	Channel *channel = NULL;
-	
+	int i = 0;
 	while (it != end)
 	{
 		if (!chName.compare((*it)->getName()))
+		{
 			channel = *it;
+			break;
+		}
 		it++;
+		i++;
 	}
 	const std::string name = channel->getName();
-
     channel->broadcast(RPLY_PART(get_prefix(), channel->getName()));
 	channel->removeClient(this);
 	if (channel)
-		channels.erase(it);
+	{
+		if (channels.size() > 1)
+			this->channels.erase(this->channels.begin() + i);
+		else
+			this->channels.clear();
+	}
 }
 
 bool Client::isInChannel(std::string chName)
@@ -212,6 +220,7 @@ bool Client::isInChannel(std::string chName)
 
 void Client::leaveAllChannels()
 {
+
 	std::vector<Channel *> channels = get_channels();
 
 	while (channels.size() > 0)
