@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   admin_Command.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:07:38 by alalmazr          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2023/06/30 22:21:52 by dkaratae         ###   ########.fr       */
-=======
-/*   Updated: 2023/06/30 22:02:35 by mraspors         ###   ########.fr       */
->>>>>>> a3a5d45c88e57e4b0221d1cb6b4a56a5eb8cbc85
+/*   Updated: 2023/06/30 22:39:17 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +47,11 @@ void KICK::execute(Client *client, std::vector<std::string> args)
 		}
 	}
 	Client *dest_client = serv->get_client(target);
+	if (dest_client->get_nick().compare(client->get_nick()) == 0)
+	{
+		client->reply(ERR_NO_EXIST(client->get_nick(), dest_client->get_nick()));
+		return;
+	}
 	if (!dest_client)
 	{
 		client->reply(ERR_NO_EXIST(client->get_nick(), dest_client->get_nick()));
