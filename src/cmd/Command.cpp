@@ -6,7 +6,11 @@
 /*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 18:09:47 by mraspors          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2023/06/30 21:56:40 by dkaratae         ###   ########.fr       */
+=======
+/*   Updated: 2023/06/30 20:50:55 by mraspors         ###   ########.fr       */
+>>>>>>> a3a5d45c88e57e4b0221d1cb6b4a56a5eb8cbc85
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,7 +209,7 @@ void JOIN::execute(Client *client, std::vector<std::string> args) //ERROR segfau
 			return;
 		}
 	}
-	if (channel->getMode() == "+i")
+	if (channel->getInviteOnly() == true)
 	{
 		if (channel->isInvited(client) == false)
 		{
