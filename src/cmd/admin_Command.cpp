@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:07:38 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/30 21:19:25 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 22:02:35 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,8 +183,13 @@ void MODE::execute(Client *client, std::vector<std::string> args)
 			{
 				if ((cl = serv->get_client(args[2])) == NULL)
 				{
-				client->reply(ERR_MOREPARAMS(client->get_nick(), "MODE"));
-					return;
+					client->reply(ERR_MOREPARAMS(client->get_nick(), "MODE"));
+						return;
+				}
+				if (ch->isClientInChannel(cl) == false)
+				{
+					client->reply(ERR_MOREPARAMS(client->get_nick(), "MODE"));
+						return;
 				}
 				ch->setModeO(sign, cl);
 			}
