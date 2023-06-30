@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   admin_Command.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:07:38 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/30 03:03:14 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 17:29:55 by dkaratae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,8 +154,10 @@ void MODE::execute(Client *client, std::vector<std::string> args)
 			return;
 		}
 		sign = args[1][0];
+		std::cout << "HERE!!!1" << std::endl;
 		if (args[1][1] == 'i')
 		{
+			std::cout << "HERE!!!2" << std::endl;
 			if (args.size() == 2)	
 				ch->setModeI(sign);
 			else
@@ -163,7 +165,7 @@ void MODE::execute(Client *client, std::vector<std::string> args)
 				std::cout << "You should use MODE #flag +/-i!!!" << std::endl;
 				return;
 			}
-			
+			std::cout << "HERE!!!3" << std::endl;
 		}
 		else if (args[1][1] == 't')
 		{

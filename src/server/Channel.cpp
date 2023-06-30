@@ -6,11 +6,12 @@
 /*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:41:28 by dkaratae          #+#    #+#             */
-/*   Updated: 2023/06/30 03:18:16 by dkaratae         ###   ########.fr       */
+/*   Updated: 2023/06/30 17:46:38 by dkaratae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
+#include <cstdio>
 #include <string>
 
 Channel::Channel (std::string channelName, std::string key, Client *client)
@@ -49,13 +50,13 @@ void Channel::setModeI(char sign)
 {
     if (sign == '+')
     {
-        inviteOnly = false;
-        std::cout << "inviteOnly = false;" << std::endl;
+        inviteOnly = true;
+        std::cout << "This Channel only Invite ticket!" << std::endl;
     }
     else if (sign == '-')
     {
-        inviteOnly = true;
-        std::cout << " inviteOnly = true;" << std::endl;
+        inviteOnly = false;
+        std::cout << "Delete only Invite!" << std::endl;
     }
 }
 void Channel::setModeT(char sign)
@@ -77,12 +78,12 @@ void Channel::setModeK(char sign, std::string key)
     if (sign == '+')
     {
         this->key = key;
-        std::cout << "this->key = key;" << std::endl;
+        std::cout << "Set password for this Channel!" << std::endl;
     }
     else if (sign == '-')
     {
         key = "";
-        std::cout << "key = "";" << std::endl;
+        std::cout << "Delete password for this Channel!" << std::endl;
     }
 }
 
@@ -91,12 +92,12 @@ void Channel::setModeO(char sign, Client *client)
     if (sign == '+')
     {
         setOperator(client, true);
-        std::cout << "etOperator(client, true);" << std::endl;
+        std::cout << client->get_nick() << " is Operator this Channel!" << std::endl;
     }
     else if (sign == '-')
     {
         setOperator(client, false);
-        std::cout << "setOperator(client, false);" << std::endl;
+        std::cout << client->get_nick() << " isn't Operator this Channel!"<< std::endl;
     }
 }
 
@@ -105,17 +106,17 @@ void Channel::setModeL(char sign, int limit)
     if (sign == '+')
     {
         if (limit < getCountClients())
-            std::cout << "Not possible because the limit less then clients in the Channel" << std::endl;
+            std::cout << "Not possible set limit, because it less then clients in the Channel" << std::endl;
         else
         {
             setUserLimit(limit);
-            std::cout << "setUserLimit(limit);" << std::endl;
+            std::cout << "You set limit "<< limit << " users for this Channel" << std::endl;
         }
     }
     else if (sign == '-')
     {
         setUserLimit(-1);
-        std::cout << "s setUserLimit(-1);" << std::endl;
+        std::cout << "You unset limit of users for this Channel" << std::endl;
     }
 }
 
@@ -191,11 +192,6 @@ void Channel::setInviteOnly(bool inviteOnly)
     this->inviteOnly = inviteOnly;
 }
 
-// bool Channel::isInviteOnly()
-// {
-//     return this->inviteOnly;
-// }
-
 void Channel::setOperator(Client *client, bool isOperator)
 {
     if (isOperator)
@@ -213,6 +209,11 @@ void Channel::setOperator(Client *client, bool isOperator)
             }
         }
     }
+}
+
+void Channel::setInviteList(Client *client)
+{
+    this->inviteList.push_back(client);
 }
 
 bool Channel::isOperator(std::string nickName)
