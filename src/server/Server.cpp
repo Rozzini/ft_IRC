@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 15:23:06 by mraspors          #+#    #+#             */
-/*   Updated: 2023/07/01 14:31:13 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/07/01 16:08:41 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,7 @@ void            Server::on_client_message(int fd)
     {
         Client*     client = _clients.at(fd);
         std::string message = this->read_message(fd);
-        std::cout << message << std::endl;
+    
         _parser->invoke(client, message);
     }
     catch (const std::exception& e) 
