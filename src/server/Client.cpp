@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 19:10:46 by alalmazr          #+#    #+#             */
-/*   Updated: 2023/06/30 04:04:21 by dkaratae         ###   ########.fr       */
+/*   Updated: 2023/06/30 20:01:41 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,9 +125,9 @@ void Client::reply(const std::string &msg)
 // irc welcome msg
 void Client::welcome()
 {
-	if (state != 1 || uname.empty() || name.empty() || nick.empty())
+	if (this->state != 1 || uname.empty() || name.empty() || nick.empty())
 		return;
-	state = 2; // registered
+	this->state = 2; // registered
 	this->reply("welcome " + nick);
 	char message[100];
 	sprintf(message, "%s:%d is now known as %s.", host.c_str(), port, nick.c_str());
@@ -195,7 +195,7 @@ void Client::leaveChannel(std::string chName)
 	channel->removeClient(this);
 	if (channel)
 	{
-		if (channels.size() > 1)
+		if (this->channels.size() > 1)
 			this->channels.erase(this->channels.begin() + i);
 		else
 			this->channels.clear();

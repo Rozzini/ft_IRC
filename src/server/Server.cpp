@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 15:23:06 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/30 04:24:18 by dkaratae         ###   ########.fr       */
+/*   Updated: 2023/07/01 14:31:13 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,12 +106,11 @@ Channel*        Server::get_channel(const std::string& name)
 
     while (it_b != it_e)
     {
-        if (!name.compare((*it_b)->getName()))
+        if (name.compare((*it_b)->getName()) == 0)
             return (*it_b);
 
         it_b++;
     }
-    
     return NULL;
 }
 
@@ -159,7 +158,6 @@ void            Server::on_client_disconnect(int fd)
         // finding the client and removing
         Client* client = _clients.at(fd);
         client->leaveAllChannels();
-        std::cout << "AAA2" << std::endl;
         // log about disconnecting 
 
         std::cout << client->get_host().c_str() <<  client->get_port() << " has disconnected!" <<std::endl;
@@ -236,9 +234,8 @@ Channel*        Server::create_channel(const std::string& name, const std::strin
     Channel *channel = new Channel(name, key, client);
     _channels.push_back(channel);
     client->reply(RplChannelCreated(channel->getName()));
-    client->reply(RplTopic(channel->getName(), "AAA"));
-    client->reply(RplTopicSetBy(channel->getName(), "AAA"));
-    //client->reply(RplChannelCreated(channel->getName()));
+    client->reply(RplTopic(channel->getName(), channel->getName()));
+    client->reply(RplTopicSetBy(channel->getName(), channel->getName()));
     return channel;
 }
 

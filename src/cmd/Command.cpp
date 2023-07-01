@@ -5,13 +5,16 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/25 18:03:16 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/30 02:58:12 by mraspors         ###   ########.fr       */
+/*   Created: 2023/06/30 18:09:47 by mraspors          #+#    #+#             */
+/*   Updated: 2023/06/30 23:06:43 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+
+
 #include "Command.hpp"
 #include "../server/Server.hpp"
+#include <cstddef>
 
 class Client;
 // base class
@@ -50,14 +53,12 @@ void PASS::execute(Client *client, std::vector<std::string> args)
 	if (args.empty())
 	{
 		client->reply(ERR_MOREPARAMS(client->get_nick(), "PASS"));
-		std::cout << "MORE PARAMS PLS" << std::endl;
 		return;
 	}
 
 	if (client->get_state() == 2) //== registered )
 	{
 		client->reply(ERR_ALREADY_REG(client->get_nick()));
-		std::cout << "ALREADY REGISTERED" << std::endl;
 		return;
 	}
 
@@ -68,12 +69,10 @@ void PASS::execute(Client *client, std::vector<std::string> args)
 	if (serv->get_password() != password)
 	{
 		client->reply(ERR_PW(client->get_nick()));
-		std::cout << "WRONG SERV PASS" << std::endl;
 		return;
 	}
 
-	client->set_state(2); // 1 = registered
-	std::cout << "LOGED IN" << std::endl;
+	client->set_state(1); // 1 = registered
 }
 
 // NICK <nickname>
@@ -82,7 +81,6 @@ void NICK::execute(Client *client, std::vector<std::string> args)
 	if (args.empty() || args[0].empty())
 	{
 		client->reply(ERR_NO_NICK(client->get_nick()));
-		std::cout << "MORE PARAMS PLS" << std::endl;
 		return;
 	}
 
@@ -90,12 +88,10 @@ void NICK::execute(Client *client, std::vector<std::string> args)
 	if (serv->get_client(nickname))
 	{
 		client->reply(ERR_NICK_USED(client->get_nick()));
-		std::cout << "NAME TAKEN" << std::endl;
 		return;
 	}
 	client->set_nick(nickname);
 	client->welcome();
-	std::cout << "WHALE CUM" << std::endl;
 }
 
 //  USER <username> <hostname> <servername> <realname>
@@ -104,13 +100,11 @@ void USER::execute(Client *client, std::vector<std::string> args)
 	if (client->get_state() == 2)
 	{
 		client->reply(ERR_ALREADY_REG(client->get_nick()));
-		std::cout << "REGISTERED" << std::endl;
 		return;
 	}
 	if (args.size() < 4)
 	{
 		client->reply(ERR_MOREPARAMS(client->get_nick(), "USER"));
-		std::cout << "MORE PARAMS PLS" << std::endl;
 		return;
 	}
 	client->set_uname(args[0]);
@@ -141,8 +135,13 @@ void PM::execute(Client *client, std::vector<std::string> args)
 
     if (target.at(0) == '#')//channel notice
     {
-		Channel *channel =  serv->get_channel(target.substr(1, target.size()));
-        if (client->isInChannel(channel->getName()))
+		Channel *channel =  serv->get_channel(target);
+		if (channel == NULL)
+		{
+			client->reply(ERR_CHAN(client->get_nick(), target));
+			return;
+		}
+        if (!client->isInChannel(channel->getName()))
         {
             client->reply(ERR_CHAN(client->get_nick(), target));
 			return;
@@ -171,7 +170,7 @@ void QUIT::execute(Client *client, std::vector<std::string> args)
 }
 
 // JOIN <channels> [<keys>]
-void JOIN::execute(Client *client, std::vector<std::string> args)
+void JOIN::execute(Client *client, std::vector<std::string> args) //ERROR segfault <JOIN 42>
 {
 	if (args.empty())
 	{
@@ -181,6 +180,11 @@ void JOIN::execute(Client *client, std::vector<std::string> args)
 	std::string name = args[0];
 	std::string pass = args.size() > 1 ? args[1] : "";
 
+	if(name[0] != '#')
+	{
+		client->reply(RPLY_USE_HASH(name));
+		return;
+	}
 	if (client->isInChannel(name))
 	{
 		client->reply(ERR_ALREADYJOINEDCHANNEL(client->get_nick(), name));
@@ -197,10 +201,24 @@ void JOIN::execute(Client *client, std::vector<std::string> args)
 		client->reply(ERR_CHANNEL_FULL(client->get_nick(), name));
 		return;
 	}
-	if (channel->getKey() != pass)
+	// || channel->getKey().compare("")
+	if (channel->getKey().empty() == false || channel->getKey().compare(""))
 	{
-		client->reply(ERR_CHANNELKEY(client->get_nick(), name));
-		return;
+		if (channel->getKey() != pass)
+		{
+			client->reply(ERR_CHANNELKEY(client->get_nick(), name));
+			return;
+		}
+	}
+	if (channel->getInviteOnly() == true)
+	{
+		if (channel->isInvited(client) == false)
+		{
+			client->reply(ERR_INV_ONLY_CH(channel->getName()));
+			return;
+		}
+		else
+			channel->popInivte(client);
 	}
 
 	client->join(channel);

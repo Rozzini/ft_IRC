@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dkaratae <dkaratae@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:41:28 by dkaratae          #+#    #+#             */
-/*   Updated: 2023/06/30 03:18:16 by dkaratae         ###   ########.fr       */
+/*   Updated: 2023/06/30 22:58:13 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
+#include <cstdio>
 #include <string>
 
 Channel::Channel (std::string channelName, std::string key, Client *client)
@@ -33,13 +34,11 @@ bool Channel::check_mode(char c)
     n = ops.find(c);
     if (n == std::string::npos)
     {
-        std::cout << "dolboeb" << std::endl;
         return false;
     }
     n = this->modes.find(c);
     if (n == std::string::npos)
     {
-        std::cout << "ne nashol" << std::endl;
         return false;
     }
     return true;
@@ -49,13 +48,13 @@ void Channel::setModeI(char sign)
 {
     if (sign == '+')
     {
-        inviteOnly = false;
-        std::cout << "inviteOnly = false;" << std::endl;
+        inviteOnly = true;
+        std::cout << "This Channel only Invite ticket!" << std::endl;
     }
     else if (sign == '-')
     {
-        inviteOnly = true;
-        std::cout << " inviteOnly = true;" << std::endl;
+        inviteOnly = false;
+        std::cout << "Delete only Invite!" << std::endl;
     }
 }
 void Channel::setModeT(char sign)
@@ -77,12 +76,12 @@ void Channel::setModeK(char sign, std::string key)
     if (sign == '+')
     {
         this->key = key;
-        std::cout << "this->key = key;" << std::endl;
+		this->operators.front()->reply(RPLY_CHAN_PW_SET(this->getName()));
     }
     else if (sign == '-')
     {
-        key = "";
-        std::cout << "key = "";" << std::endl;
+        this->key = "";
+        this->operators.front()->reply(RPLY_CHAN_PW_UNSET(this->getName()));
     }
 }
 
@@ -91,12 +90,12 @@ void Channel::setModeO(char sign, Client *client)
     if (sign == '+')
     {
         setOperator(client, true);
-        std::cout << "etOperator(client, true);" << std::endl;
+		client->reply(RPLY_USR_IS_OP(client->get_nick(), this->getName()));
     }
     else if (sign == '-')
     {
         setOperator(client, false);
-        std::cout << "setOperator(client, false);" << std::endl;
+        client->reply(RPLY_USR_NOT_OP(client->get_nick(), this->getName()));
     }
 }
 
@@ -105,17 +104,17 @@ void Channel::setModeL(char sign, int limit)
     if (sign == '+')
     {
         if (limit < getCountClients())
-            std::cout << "Not possible because the limit less then clients in the Channel" << std::endl;
+           this->operators.front()->reply(RPLY_TOO_MUCH_LIMIT(this->getName()));
         else
         {
             setUserLimit(limit);
-            std::cout << "setUserLimit(limit);" << std::endl;
+          this->operators.front()->reply(RPLY_LIMIT_SET(this->getName()));
         }
     }
     else if (sign == '-')
     {
-        setUserLimit(-1);
-        std::cout << "s setUserLimit(-1);" << std::endl;
+        setUserLimit(limit);
+        this->operators.front()->reply(RPLY_LIMIT_UNSET(this->getName()));
     }
 }
 
@@ -191,11 +190,6 @@ void Channel::setInviteOnly(bool inviteOnly)
     this->inviteOnly = inviteOnly;
 }
 
-// bool Channel::isInviteOnly()
-// {
-//     return this->inviteOnly;
-// }
-
 void Channel::setOperator(Client *client, bool isOperator)
 {
     if (isOperator)
@@ -213,6 +207,11 @@ void Channel::setOperator(Client *client, bool isOperator)
             }
         }
     }
+}
+
+void Channel::setInviteList(Client *client)
+{
+    this->inviteList.push_back(client);
 }
 
 bool Channel::isOperator(std::string nickName)
@@ -238,7 +237,7 @@ int Channel::getUserLimit()
 void Channel::addClient(Client *client)
 {
     this->clients.push_back(client);
-    std::cout << client->get_nick() << " added to Channel!" << std::endl;
+   client->reply(RPLY_USER_ADDED(client->get_nick(), this->getName()));
 }
 
 void Channel::removeClient(Client *client)
@@ -248,6 +247,7 @@ void Channel::removeClient(Client *client)
         if (this->clients[i]->get_nick() == client->get_nick())
         {
             this->clients.erase(this->clients.begin() + i);
+            this->broadcast(RPLY_KICK(client->get_prefix(), "ch", client->get_nick(), "no reason"));
             break;
         }
     }
@@ -293,4 +293,43 @@ void Channel::broadcast(const std::string& message, Client* exclude)
         (*it_b)->write(message);
         it_b++;
     }
+}
+
+void Channel::popInivte(Client *client)
+{
+    client_iterator it_b = this->inviteList.begin();
+    client_iterator it_e = this->inviteList.end();
+    Client *tmp = NULL;
+    int i = 0;
+    while (it_b != it_e)
+    {
+        if (client->get_nick().compare((*it_b)->get_nick()) == 0)
+        {
+            tmp = *it_b;
+            break;
+        };
+        it_b++;
+        i++;
+    }
+    if (tmp)
+	{
+		if (this->inviteList.size() > 1)
+			this->inviteList.erase(this->inviteList.begin() + i);
+		else
+			this->inviteList.clear();
+	}
+}
+
+bool Channel::isInvited(Client *client)
+{
+    client_iterator it_b = this->inviteList.begin();
+    client_iterator it_e = this->inviteList.end();
+
+    while (it_b != it_e)
+    {
+        if (client->get_nick().compare((*it_b)->get_nick()) == 0)
+            return true;
+        it_b++;
+    }
+    return false;
 }

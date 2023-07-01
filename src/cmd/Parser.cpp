@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parser.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: alalmazr <alalmazr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:44:41 by mraspors          #+#    #+#             */
-/*   Updated: 2023/06/30 03:03:22 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 19:35:24 by alalmazr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ Parser::Parser(Server* srv) : _srv(srv)
     _commands["USER"] = new USER(_srv, false);
     _commands["QUIT"] = new QUIT(_srv, false);
 
-    _commands["PM"] = new PM(_srv);
+    _commands["PRIVMSG"] = new PM(_srv);
     _commands["JOIN"] = new JOIN(_srv);
     _commands["KICK"] = new KICK(_srv);
     _commands["KILL"] = new KILL(_srv);
@@ -82,7 +82,7 @@ void            Parser::invoke(Client* client, const std::string& message)
 
             if (client->get_state() != 2 && cmd->need_auth())
             {
-                std::cout << "451 " << client->get_nick() << " :You have not registered" <<std::endl;
+				client->reply(ERR_NO_REG(client->get_nick()));
                 return;
             }
 
@@ -90,8 +90,8 @@ void            Parser::invoke(Client* client, const std::string& message)
         }
         catch (const std::exception& e)
         {
-            std::cout << "421 " << client->get_nick() << 
-            " " << name << " :Unknown command" << std::endl;
+			
+			client->reply(ERR_UNKNOWN_COMMAND(client->get_nick(), name));
         }
     }
 } 

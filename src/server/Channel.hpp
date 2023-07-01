@@ -6,7 +6,7 @@
 /*   By: mraspors <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 17:41:22 by dkaratae          #+#    #+#             */
-/*   Updated: 2023/06/30 03:03:41 by mraspors         ###   ########.fr       */
+/*   Updated: 2023/06/30 19:56:30 by mraspors         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,8 @@ class Channel
         bool getBoolTopic();
 
         void setInviteOnly(bool inviteOnly);
-        // bool isInviteOnly();
-
         void setOperator(Client *client, bool isOperator);
+        void setInviteList(Client *client);
         bool isOperator(std::string nickName);
 
         void setUserLimit(int limit);
@@ -67,6 +66,9 @@ class Channel
         
         std::vector<Client *> getOperators();
         std::vector<Client *> getClients();
+
+        void popInivte(Client *client);
+        bool isInvited(Client *client);
     private:
         std::string name;
         std::string topic;
@@ -77,6 +79,7 @@ class Channel
         bool inviteOnly;
         std::vector<Client *> clients;
         std::vector<Client *> operators;
+        std::vector<Client *> inviteList;
         int userLimit;
 };
 
